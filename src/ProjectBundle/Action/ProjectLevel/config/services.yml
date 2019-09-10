@@ -1,0 +1,24 @@
+# ProjectLevel/config/services.yml
+services:
+
+  cerad_project_level_connection_dbal:
+    alias: doctrine.dbal.sportacus_connection
+
+# =====================================================
+# Project Level Importer
+  cerad_project_level_import_command:
+    class: Cerad\ProjectLevel\Import\ImportCommand
+    tags:  [{ name: console.command }]
+    arguments:
+      - '@cerad_project_level_importer_excel'
+
+  cerad_project_level_import_action:
+    class: Cerad\ProjectLevel\Import\ImportAction
+    calls: [[setContainer, ['@service_container']]]
+    arguments:
+      - '@cerad_project_level_importer_excel'
+
+  cerad_project_level_importer_excel:
+    class: Cerad\ProjectLevel\Import\ImporterExcel
+    arguments:
+      - '@cerad_project_level_connection_dbal'

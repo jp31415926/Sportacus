@@ -1,0 +1,12 @@
+# src/Scheduler/SchBundle/Resources/config/routing.yml
+
+login_check:
+    path:   /login_check
+
+logout:
+    path:   /logout
+
+# import routes from a controller directory
+controllers:
+    resource: "@SchedulerBundle/Controller"
+    type:     annotation

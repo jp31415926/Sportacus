@@ -1,0 +1,59 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<h1>{{ title }} #{{ game.number }}</h1>
+
+<table>
+<tr><td>Home: </td><td><strong>{{ game.team1 }}</strong></td></tr>
+<tr><td>Away: </td><td><strong>{{ game.team2 }}</strong></td></tr>
+<tr><td>Date: </td><td><strong>{{ game.date|date('D M j') }} {{ game.time|date('g:i A') }}</strong></td></tr>
+<tr><td>Location: </td><td><strong>{{ game.location }}</strong></td></tr>
+</table>
+<p>
+<table>
+<tr><td><b>Inactive</b></td><td>Game is in the system, but is not acted. Changes don't send notices.</td></tr>
+<tr><td><b>Normal</b></td><td>Game is normal, but not complete. Referee can make changes.</td></tr>
+<tr><td><b>Complete</b></td><td>Game has been played and official has updated scorecard.</td></tr>
+<tr><td><b>Cancelled</b></td><td>Game is cancelled. No plans at this time to reschedule.</td></tr>
+<tr><td><b>Suspended</b></td><td>Game started but had to be suspended.</td></tr>
+<tr><td><b>Rained out</b></td><td>Game is postponed/cancelled due to rain.</td></tr>
+<tr><td><b>Forfeit</b></td><td>One team had to forfeit the game. Please provide details in Scorecard Notes.</td></tr>
+<tr><td><b>Postponed</b></td><td>Game has been postponed and is planned to be rescheduled.</td></tr>
+</table>
+</p>
+<br />
+{{ form_start(edit_form, {'action': path('game_scorecard', { 'id': game.id }), 'attr': {'class': 'contact'} }) }}
+    <div>
+    {{ form_errors(edit_form) }}
+    </div>
+    <div>
+    {{ form_label (edit_form.status) }}
+    {{ form_widget(edit_form.status) }}
+    <b>Referees: Please update status when scores are entered.</b>
+    </div>
+    <div>
+    {{ form_label (edit_form.score1) }}
+    {{ form_widget(edit_form.score1) }}
+    <b> {{ game.team1 }}</b>
+    </div>
+    <div>
+    {{ form_label (edit_form.score2) }}
+    {{ form_widget(edit_form.score2) }}
+    <b> {{ game.team2 }}</b>
+    </div>
+    <div>
+    {{ form_label (edit_form.alert_admin) }}
+    {{ form_widget(edit_form.alert_admin) }}
+    <b> (Check to send your message to both region's administrators.)</b>
+    </div>
+    {{ form_rest(edit_form) }}
+{% if not readonly %}
+  <p>
+    <button type="submit" class="btn btn-large btn-primary">Update</button>
+  </p>
+{% endif %}
+{{ form_end(edit_form) }}
+
+<a href="{{ path('official_schedule') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the schedule</a>
+{% endblock %}

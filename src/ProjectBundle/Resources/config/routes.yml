@@ -1,0 +1,9 @@
+# ProjectBundle/Resources/config/routs.yml
+
+project_game:
+  resource: "@CeradProjectBundle/Action/ProjectGame/config/routes.yml"
+  prefix:   /project-game
+
+project_level:
+  resource: "@CeradProjectBundle/Action/ProjectLevel/config/routes.yml"
+  prefix:   /project-level

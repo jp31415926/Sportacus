@@ -1,0 +1,39 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+
+<table class="record_properties table table-condensed">
+  <tbody>
+  <tr>
+    <th>Id</th>
+    <td>{{ entity.id }}</td>
+  </tr>
+  <tr>
+    <th>Name</th>
+    <td>{{ entity.name }}</td>
+  </tr>
+  <tr>
+    <th>Email</th>
+    <td>{{ entity.email }}</td>
+  </tr>
+  </tbody>
+</table>
+
+<br/>
+{% if is_granted("ROLE_SCHEDULER") %}
+  <p><a href="{{ path('mobileprovider_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a></p>
+  <p><a href="{{ path('mobileprovider_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> New</a></p>
+  {#<p><a href="{{ path('mobileprovider_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone</a>#}
+  {{ form_start(delete_form, {'action': path('mobileprovider_delete', { 'id': entity.id })}) }}
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn btn-danger" 
+            onclick="return confirm('Are you sure you want to delete this Mobile Provider?');">Delete
+    </button>
+  {{ form_end(delete_form) }}
+  </p>
+{% endif %}
+<p><a href="{{ path('mobileprovider') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+
+{% endblock %}

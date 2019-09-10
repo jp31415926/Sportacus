@@ -1,0 +1,35 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% set title='List RefPntsMap' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+<table class="records_list table table-hover table-condensed">
+  <thead>
+  <tr>
+    <th>&nbsp;</th>
+    <th>User</th>
+    <th>Team</th>
+    <th>Priority</th>
+    <th>Project</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for entity in entities %}
+    <tr>
+      <td><a href="{{ path('refpntsmap_show', { 'id': entity.id }) }}"><img src="{{ asset('assets/img/information-white.png') }}"></a>
+        <a href="{{ path('refpntsmap_edit', { 'id': entity.id }) }}"><img src="{{ asset('assets/img/report--pencil.png') }}"></a></td>
+      <td>{{ entity.user }}</td>
+      <td>{{ entity.team }}</td>
+      <td>{{ entity.priority }}</td>
+      <td>{{ entity.project }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+  <p><a href="{{ path('refpntsmap_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create</a></p>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+scheduler_api_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SchedulerApiBundle:Default:index }
+    
+scheduler_api_projects_games_search:
+    path:     /projects/{projectId}/games
+    methods: ['GET']
+    defaults: { _controller: scheduler_api_projects_games_controller:searchAction }
+    
+scheduler_api_projects_games_get:
+    path:     /projects/{projectId}/games/{gameNum}
+    methods: ['GET']
+    defaults: { _controller: scheduler_api_projects_games_controller:getAction }

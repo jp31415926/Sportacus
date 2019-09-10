@@ -1,0 +1,7 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+    <h1>Confirm Your Email Address</h1>
+    <p>A confirmation email has been sent to {{ user.email }}. It contains an activation link you must click to activate your account.</p>
+    <p>Note: If you don't receive the email in 15 minutes or so, you might need to check your SPAM folder.</p>
+{% endblock fos_user_content %}

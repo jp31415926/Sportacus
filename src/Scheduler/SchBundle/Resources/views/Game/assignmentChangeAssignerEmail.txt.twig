@@ -1,0 +1,28 @@
+{{ user.getFullName() }} changed following official assignments for Game {{ oldgame.number }}:
+{{ msg }}
+{% if note %}
+The following information was provided for this assignment change:
+{{ note }}
+
+{% endif %}
+Home: {{ oldgame.team1 }}
+Away: {{ oldgame.team2 }}
+Date: {{ oldgame.date|date('l, F j, Y') }}
+Time: {{ oldgame.time|date('g:i A') }}
+Location: {{ oldgame.location }}
+Status: {{ oldgame.getStatusString() }}
+
+Officials:
+{% set count = 0 %}
+{% for ref in refs %}
+{% if ref %}
+{{ positions[loop.index0] }}: {{ ref }}
+{% set count=count+1 %}
+{% endif %}
+{% endfor %}
+{% if count == 0 %}
+None
+{% endif %}
+
+Thanks for using Sportac.us!
+http://sportac.us

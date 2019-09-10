@@ -1,0 +1,26 @@
+# ProjectGame/routes.yml
+# /project-game/
+
+project_game_show:
+  path:     /{gameId}/show
+  methods:  [GET]
+  defaults:
+    _controller: sportacus_project_game_show_controller
+
+project_game_email:
+  path:     /{gameId}/email
+  methods:  [GET,POST]
+  defaults:
+    _controller: sportacus_project_game_email_controller
+
+project_game_import:
+  path:     /import
+  methods:  [GET,POST]
+  defaults:
+    _controller: sportacus_project_game_import_controller
+
+project_game_export:
+  path:     /export
+  methods:  [GET,POST]
+  defaults:
+    _controller: sportacus_project_game_export_controller

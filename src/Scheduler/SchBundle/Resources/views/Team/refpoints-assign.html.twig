@@ -1,0 +1,52 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  <p>Total {{ refinfo.points.points }} points from {{ refinfo.points.numgames }} games,
+    <span{% if refinfo.leftover > 0 %} style="color: red; font-size: 150%"{% endif %}>{{ refinfo.leftover }} points unallocated.</span>
+  </p>
+  <div class="noprint">
+    <p><strong>You are allowed to assign points to up to 3 teams.</strong></p>
+
+    <p>Instructions: Choose the teams you want to allocate your official points to by placing numbers in the priority
+      fields, starting with one, which is the highest priority. Points will be allocated to teams in priority order.
+      If there are unallocated points, that means you have left-over points after all your chosen teams reached their
+      goals.</p>
+  </div>
+  <form action="{{ path('ref_pnts_assign') }}" method="post" class="refpoints" id="refpoints">
+
+    <table class="records_list table table-hover table-condensed">
+      <thead>
+      <tr>
+        <th>Team</th>
+        <th>Team Points</th>
+        <th>Officials</th>
+        <th>Priority</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for teamid, team in teams %}
+        <tr class="{% if team.short > 0 %}error{% else %}success{% endif %}">
+          <td>{{ team.name }}</td>
+          <td>{{ team.points }} of {{ team.points + team.short }}</td>
+          <td>
+            {% if team.refs %}
+              {% for priority, ref in team.refs %}
+                +{{ ref.points }} {{ ref.user }} #{{ ref.priority }}<br/>
+              {% endfor %}
+            {% else %}
+              &nbsp;
+            {% endif %}
+          </td>
+          <td><input type="number" name="priority[{{ teamid }}]"
+                     value="{% if team.priority %}{{ team.priority }}{% endif %}"></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+{% endblock %}

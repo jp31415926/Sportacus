@@ -1,0 +1,68 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+  <table class="record_properties table table-condensed">
+    <tbody>
+    <tr>
+      <th>Number</th>
+      <td>{{ entity.number }}</td>
+    </tr>
+    <tr>
+      <th>Status</th>
+      <td>{{ entity.getStatusString() }}</td>
+    </tr>
+    <tr>
+      <th>Home Team</th>
+      <td>{% if entity.team1.colorsHome %}{% set colorsH=entity.team1.colorsHome %}
+      {% else %}{% set colorsH='Unknown' %}{% endif %}
+      <img src="{{ asset('colorsquare.php?color1=' ~ colorsH) }}" width="16" height="16" title="{{ colorsH }}"> {{ entity.team1 }}</td>
+    </tr>
+    <tr>
+      <th>Away Team</th>
+      <td>{% if entity.team2.colorsAway %}{% set colorsA=entity.team2.colorsAway %}
+      {% elseif entity.team2.colorsHome %}{% set colorsA=entity.team2.colorsHome %}
+      {% else %}{% set colorsA='Unknown' %}{% endif %}
+      <img src="{{ asset('colorsquare.php?color1=' ~ colorsA) }}" width="16" height="16" title="{{ colorsA }}"> {{ entity.team2 }}</td>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <td>{{ entity.date|date('D M j') }} {{ entity.time|date('h:i A') }}</td>
+    </tr>
+    <tr>
+      <th>Length</th>
+      <td>{{ entity.length }} mins</td>
+    </tr>
+    <tr>
+      <th>Age Group</th>
+      <td>{{ entity.agegroup }}</td>
+    </tr>
+    <tr>
+      <th>Location</th>
+      <td>{{ entity.location }}</td>
+    </tr>
+    <tr>
+      <th>Center Referee</th>
+      <td>{{ entity.ref1 }}</td>
+    </tr>
+    <tr>
+      <th>Asst Referee 1</th>
+      <td>{{ entity.ref2 }}</td>
+    </tr>
+    <tr>
+      <th>Asst Referee 2</th>
+      <td>{{ entity.ref3 }}</td>
+    </tr>
+    </tbody>
+  </table>
+  <br/>
+  {% if is_granted("ROLE_SCHEDULER") %}
+    <p><a href="{{ path('game_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a></p>
+    <p><a href="{{ path('game_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> New</a></p>
+    <p><a href="{{ path('game_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone</a>
+    </p>
+  {% endif %}
+  <p><a href="{{ path('game') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+
+{% endblock %}

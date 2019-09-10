@@ -1,0 +1,5 @@
+
+fos_user_registration_confirm:
+  path:     /confirm/{token}
+  defaults: { _controller: SchedulerBundle:UserRegistration:confirm } 
+  methods:  [GET]

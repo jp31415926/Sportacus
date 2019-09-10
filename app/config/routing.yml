@@ -1,0 +1,55 @@
+scheduler_api:
+    resource: "@SchedulerApiBundle/Resources/config/routing.yml"
+    prefix:   /api
+    schemes:  ['%httpprotocol%']
+
+scheduler:
+    resource: "@SchedulerBundle/Resources/config/routing.yml"
+    prefix:   /
+    schemes:  ['%httpprotocol%']
+
+project:
+    resource: "@CeradProjectBundle/Resources/config/routes.yml"
+    prefix:   /
+    schemes:  ['%httpprotocol%']
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+    schemes:  ['%httpprotocol%']
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+    schemes:  ['%httpprotocol%']
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+    schemes:  ['%httpprotocol%']
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile
+    schemes:  ['%httpprotocol%']
+
+#AvroCsvBundle:
+#    resource: "@AvroCsvBundle/Resources/config/routing.yml"
+
+# Internal routing configuration to handle ESI
+# ****** WARNING ******
+# This route should be enabled with caution as it can open a security vulnerability
+# see http://symfony.com/blog/security-release-symfony-2-0-20-and-2-1-5-released for more information
+# ****** WARNING ******
+#_internal:
+#    resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#    prefix:   /_internal
+
+# This needs to be after the fos stuff
+#scheduler_user:
+#    resource: "@SchedulerBundle/Resources/config/routing_user.yml"
+#    prefix:   /register
+#    schemes:  ['%httpprotocol%']

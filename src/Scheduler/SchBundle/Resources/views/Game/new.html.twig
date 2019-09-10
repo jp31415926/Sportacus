@@ -1,0 +1,62 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+
+    $(function () {
+      $(".datepicker").datepicker({
+        showOn: "button",
+        buttonImage: "{{ asset('assets/images/calendar.gif') }}",
+        buttonImageOnly: true,
+        dateFormat: "yy-mm-dd",
+        showOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+      });
+      $("#swap").click(function () {
+        var home = $("#scheduler_schbundle_gametype_team1").val();
+        var away = $("#scheduler_schbundle_gametype_team2").val();
+        $("#scheduler_schbundle_gametype_team1").val(away);
+        $("#scheduler_schbundle_gametype_team2").val(home);
+        return false;
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  {{ form_start(form, {'action': path('game_create'), 'attr': {'class': 'contact'} }) }}
+    <div>
+      {{ form_label (form.date) }}
+      {{ form_errors(form.date) }}
+      {{ form_widget(form.date, { 'attr': {'class': 'datepicker'} }) }}
+    </div>
+
+    <div>
+      {{ form_label (form.time) }}
+      {{ form_errors(form.time) }}
+      {{ form_widget(form.time, { 'attr': {'class': 'timepicker'} }) }}
+    </div>
+    {{ form_row(form.published) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.agegroup) }}
+    <div>
+      {{ form_label (form.team1) }}
+      {{ form_errors(form.team1) }}
+      {{ form_widget(form.team1) }}
+      <a href="" id="swap">Swap Home<->Away</a>
+    </div>
+    {{ form_row(form.team2) }}
+
+    {{ form_rest(form) }}
+    <p>
+      <button type="submit">Create</button>
+    </p>
+  {{ form_end(form) }}
+  <p><a href="{{ path('game') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the list</a></p>
+
+{% endblock %}

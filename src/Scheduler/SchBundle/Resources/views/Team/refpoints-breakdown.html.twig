@@ -1,0 +1,144 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <style type="text/css">
+    .override-table td {
+      border: none !important;
+      /*border-width: 0;*/
+      line-height: 1em;
+    }
+
+    .dark-border-table td, th {
+      border: 1px solid;
+      /*border-color: rgb(0, 0, 0);*/
+      white-space: nowrap;
+    }
+  </style>
+
+  <h1>{{ title }}</h1>
+  <h3>Official: {{ ref }}</h3>
+  <p>Current as of {{ "now"|date("Y-m-d H:i:s") }}</p>
+  <table class="records_list table table-condensed table-hover dark-border-table">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Date / Status</th>
+      <th>Location / Length</th>
+      <th>Score</th>
+      <th>Home / Away</th>
+      <th>Official Team</th>
+      <th>Points</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set lastday='' %}
+    {% for gamei in gameinfo.games %}
+      {% set game=gamei.game %}
+      {% if lastday and (lastday != game.date|date('D M j')) %}
+        <tr>
+          <td colspan="7"></td>
+        </tr>
+      {% endif %}
+      {% set lastday=game.date|date('D M j') %}
+      {% set color=game.getStatusColor() %}
+      <tr{% if color %} class="{{ color }}"{% endif %}>
+        <td>
+          {% if game.number %}{{ game.number }}{% else %}{{ game.id }}{% endif %}
+          <br/>{{ game.project }}
+        </td>
+
+        <td>{{ game.date|date('D M j') }} {{ game.time|date('h:i A') }}<br/>{{ game.getStatusString() }}</td>
+
+        <td>
+          {{ game.location }}
+          {% if game.length and game.timeslotlength %}
+            <br/>{{ game.length }}/{{ game.timeslotlength }} min
+          {% elseif game.timeslotlength %}
+            <br/>{{ game.length }} min
+          {% elseif game.timeslotlength %}
+            <br/>{{ game.timeslotlength }} min slot
+          {% endif %}</td>
+
+        {% if is_granted("ROLE_REF") %}
+          <td><a href="{{ path('game_scorecard', { 'id': game.id }) }}">{{ game.score1 }}<br/>{{ game.score2 }}</a></td>
+        {% else %}
+          <td>{{ game.score1 }}<br/>{{ game.score2 }}</td>
+        {% endif %}
+
+				{% set colorsH,colorsA='Unknown','Unknown' %}
+				{% if game.team1 and game.team1.colorsHome %}{% set colorsH=game.team1.colorsHome %}{% endif %}
+				{% if game.team2 %}
+					{% if game.team2.colorsAway %}{% set colorsA=game.team2.colorsAway %}
+					{% elseif game.team2.colorsHome %}{% set colorsA=game.team2.colorsHome %}{% endif %}
+				{% endif %}
+        <td>
+          <img src="{{ asset('colorsquare.php?color1=' ~ colorsH) }}" width="16" height="16" title="{{ colorsH }}"> {{ game.team1 }}<br/>
+          <img src="{{ asset('colorsquare.php?color1=' ~ colorsA) }}" width="16" height="16" title="{{ colorsA }}"> {{ game.team2 }}</td>
+        {% if game.agegroup.difficulty > 60 %}
+          {% if game.agegroup.difficulty < 80 %}
+            {% if game.project.id != 0 %}
+              {% set refs_req,refs_max = 1,1 %}
+            {% else %}
+              {% set refs_req,refs_max = 0,0 %}
+            {% endif %}
+          {% else %}
+            {% if game.project.id == 0 %}
+              {% set refs_req,refs_max = 1,2 %}
+            {% else %}
+              {% if game.agegroup.difficulty < 100 %}
+                {% set refs_req,refs_max = 1,1 %}
+              {% else %}
+                {% set refs_req,refs_max = 1,3 %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% else %}
+          {% set refs_req,refs_max = 0,0 %}
+        {% endif %}
+
+        <td bgcolor="{{ game.getOfficialColor(refs_req,refs_max) }}">
+
+          {% if game.agegroup.difficulty >= 60 %}
+            {% if game.agegroup.difficulty < 80 %}
+              {% if is_granted("ROLE_REF") %}
+                {% if game.project.id != 0 %}
+                  <a href="{{ path('game_assign', { 'id': game.id }) }}">CR:</a> {{ game.ref1 }}<br/>
+                {% endif %}
+              {% else %}
+                {% if game.project.id != 0 %}
+                  CR: {{ game.ref1 }}<br/>
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if game.project.id == 0 %}
+                R1: {{ game.ref1 }}<br/>
+                R2: {{ game.ref2 }}<br/>
+              {% else %}
+                CR: {{ game.ref1 }}<br/>
+                AR1: {{ game.ref2 }}<br/>
+                AR2: {{ game.ref3 }}<br/>
+              {% endif %}
+            {% endif %}
+          {% else %}
+            &nbsp;
+          {% endif %}
+        </td>
+        <td>{{ gamei.points }}</td>
+      </tr>
+    {% endfor %}
+    <tr>
+      <td colspan="6">
+        <div style="float:right"><b>Total Points</b></div>
+      </td>
+      <td><b>{{ gameinfo.points }}</b></td>
+    </tr>
+    </tbody>
+  </table>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+The following changed about Game {{ oldgame.number }}:
+{{ msg }}
+The old game details:
+Home: {{ oldgame.team1 }}
+Away: {{ oldgame.team2 }}
+Date: {{ oldgame.date|date('l, F j, Y') }}
+Time: {{ oldgame.time|date('g:i A') }}
+Location: {{ oldgame.location }}
+Status: {{ oldgame.getStatusString() }}
+{% if newgame %}
+
+The new game details:
+Home: {{ newgame.team1 }}
+Away: {{ newgame.team2 }}
+Date: {{ newgame.date|date('l, F j, Y') }}
+Time: {{ newgame.time|date('g:i A') }}
+Location: {{ newgame.location }}
+Status: {{ newgame.getStatusString() }}
+{% endif %}
+{% if user %}
+
+This change was made by {{ user.getFullName() }}.
+{% endif %}
+
+Thanks for using Sportac.us!
+http://sportac.us

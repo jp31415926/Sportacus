@@ -1,0 +1,4 @@
+# ProjectBundle/services.yml
+
+parameters:
+  framework_prefix: sportacus

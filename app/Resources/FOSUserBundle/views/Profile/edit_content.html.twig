@@ -1,0 +1,8 @@
+<h1>Edit Profile</h1>
+{{ form_start(form, {'action': path('fos_user_profile_edit'), 'attr': {'class': 'contact'} }) }}
+	{{ form_widget(form) }}
+	<div>
+		<button type="submit" class="btn btn-primary btn-large">{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}</button>
+	</div>
+{{ form_end(form) }}
+<p><a href="{{ path('fos_user_profile_show') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to profile</a></p>

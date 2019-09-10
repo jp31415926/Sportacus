@@ -1,0 +1,65 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% macro widget_prototype(widget, remove_text) %}
+  {% if widget.get('prototype') %}
+    {% set form = widget.get('prototype') %}
+    {% set name = widget.get('prototype').get('name') %}
+  {% else %}
+    {% set form = widget %}
+    {% set name = widget.get('full_name') %}
+  {% endif %}
+
+  <div data-content="{{ name }}">
+    {{ form_widget(form.name) }}
+    <a class="btn btn-remove" data-related="{{ name }}">{{ remove_text }}</a>
+  </div>
+{% endmacro %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  {{ form_start(form, {'action': path('offteam_create'), 'attr': {'class': 'contact'} }) }}
+    {#{ form_widget(form) }#}
+    <div>{{ form_errors(form) }}</div>
+
+    {{ form_row(form.name) }}
+    Position names:
+    <div id="positions" data-prototype="{{ _self.widget_prototype(form.positions,'Remove')|escape }}">
+      {% for widget in form.positions.children %}
+        {{ _self.widget_prototype(widget,'Remove') }}
+      {% endfor %}
+    </div>
+    <a class="btn btn-add" data-target="positions">Add Position</a>
+
+    {{ form_row(form._token) }}
+    <p>
+      <button type="submit" class="btn btn-default">Create</button>
+    </p>
+  {{ form_end(form) }}
+
+  <p><a href="{{ path('offteam') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the list</a></p>
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    $('.btn-add').click(function (event) {
+      var collectionHolder = $('#' + $(this).attr('data-target'));
+      var prototype = collectionHolder.attr('data-prototype');
+      var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+      collectionHolder.append(form);
+
+      return false;
+    });
+    $('.btn-remove').live('click', function (event) {
+      var name = $(this).attr('data-related');
+      $('*[data-content="' + name + '"]').remove();
+
+      return false;
+    });
+  </script>
+{% endblock %}
+

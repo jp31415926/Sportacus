@@ -1,0 +1,72 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>Team Detail Information</h1>
+
+  <table class="record_properties table table-condensed">
+    <tbody>
+    <tr>
+      <th>Name</th>
+      <td>{{ entity.name }}</td>
+    </tr>
+    <tr>
+      <th>Region</th>
+      <td>{{ entity.region }}</td>
+    </tr>
+    <tr>
+      <th>Coach</th>
+      <td>{{ entity.coach }}{% if entity.coachEmail and is_granted("IS_AUTHENTICATED_REMEMBERED") %} <a href="mailto:{{ entity.coachEmail }}"><img src="{{ asset('assets/img/message.png') }}" title="{{ entity.coachEmail }}"></a>{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Home Colors</th>
+      {% if entity.colorsHome %}{% set colorsH=entity.colorsHome %}
+      {% else %}{% set colorsH='Unknown' %}{% endif %}
+      <td><img src="{{ asset('colorsquare.php?color1=' ~ colorsH) }}" width="16" height="16" title="{{ colorsH }}"> {{ colorsH }}</td>
+    </tr>
+		{% if entity.colorsAway %}
+    <tr>
+      <th>Away Colors</th>
+      {% set colorsA=entity.colorsAway %}
+      <td><img src="{{ asset('colorsquare.php?color1=' ~ colorsA) }}" width="16" height="16" title="{{ colorsA }}"> {{ colorsA }}</td>
+    </tr>
+		{% endif %}
+    <tr>
+      <th>Age Group</th>
+      <td>{{ entity.agegroup }}</td>
+    </tr>
+    <tr>
+      <th>Schedule</th>
+      <td>
+      <a href="{{ path('game', { 'teamSchId': entity.id }) }}" class="btn btn-default">Team Schedule</a>
+      <a href="{{ path('official_schedule', { 'teamSchId': entity.id }) }}" class="btn btn-default">Team Referee Schedule</a>
+      </td>
+    </tr>
+    <tr>
+      <th>Calendar</th>
+      <td>
+        <a href="webcal://sportac.us/ical/team/{{ entity.id }}"><img src="{{ asset('assets/images/calendar.gif') }}"> webcal://sportac.us/ical/team/{{ entity.id }}</a><br />
+        (Calendar how-to:
+        <a href="https://support.google.com/calendar/answer/37100" target="_blank">Google Calendar</a>,
+        <a href="http://help.yahoo.com/kb/index?page=content&id=SLN3849" target="_blank">Yahoo Calendar</a>,
+        <a href="http://office.microsoft.com/en-us/outlook-help/view-and-subscribe-to-internet-calendars-HA010167325.aspx#BM2" target="_blank">Microsoft Outlook</a>)</td>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <br/>
+  {% if is_granted("ROLE_ADMIN") %}
+    <p><a href="{{ path('team_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+      <a href="{{ path('team_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> New</a>
+      <a href="{{ path('team_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone</a></p>
+    {{ form_start(delete_form, {'action': path('team_delete', { 'id': entity.id })}) }}
+      {{ form_widget(delete_form) }}
+      <button type="submit" class="btn btn-danger" 
+              onclick="return confirm('Are you sure you want to delete this Team?');">Delete
+      </button>
+    {{ form_end(delete_form) }}
+  {% endif %}
+    <p><a href="{{ path('team') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+<p>Current as of {{ "now"|date("Y-m-d H:i:s") }}</p>
+<div class="noprint">
+{{ form_start(form, {'action': path('ref_pnts_public_summary'), 'attr': {'class': 'contact'} }) }}
+  {{ form_widget(form) }}
+  <p>
+    <button type="submit" class="btn btn-primary btn-large">Go</button>
+  </p>
+{{ form_end(form) }}
+</div>
+
+{% if teams is defined %}
+Project: {{ project }}</br>
+<table class="records_list table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>Team</th>
+			<th>Team Points</th>
+			<th>Officials</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for teamid, team in teams %}
+  <tr class="{% if team.short > 0 %}error{% else %}success{% endif %}">
+    <td>{{ team.name }}</td>
+    <td>{{ team.points }} of {{ team.points + team.short }}</td>
+    <td>
+      {% if team.refs %}
+        {% for priority, ref in team.refs %}
+          +{{ ref.points }} {#<a href="{{ path('ref_pnts_breakdown', { 'id': ref.user.id, 'project': project.id }) }}">#}{{ ref.user.getFullName() }}{#</a>#} #{{ ref.priority }}
+          <br/>
+        {% endfor %}
+      {% else %}
+        &nbsp;
+      {% endif %}
+    </td>
+  </tr>
+{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+{% endblock %}

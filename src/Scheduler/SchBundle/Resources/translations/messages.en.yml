@@ -1,0 +1,165 @@
+# This was added to get rid of the missing translation messages for the edit profile form
+# The form derives from the FOSUserBundle form thus triggering translations
+# Just using a straight replace here
+#
+# If we were really using translations then the form labels might be profile.edit.user_name
+#
+# Note: after updating this file, run app/console cache:clear even in development enviroment
+
+"First Name":      Name First
+"Last Name":       Name Last
+"Home Phone":      Home Phone
+"Mobile Phone":    Mobile Phone
+"Mobile provider": Mobile Provider
+
+"Game change notify email": Game change notify email
+"Game change notify text":  Game change notify text
+
+"Game change email": Game change email
+"Game change text":  Game change text
+
+"Game assignment email": Game assignment email
+"Game assignment text":  Game assignment text
+
+"AYSO ID": AYSO ID
+"Region":  Region
+
+"Start date": Start Date
+"End date":   End Date
+"Official":   Official
+"Team":       Team
+"Location":   Location
+"Check for Conflicts": Check for Conflicts
+
+"Referee":    Referee
+"Asst Ref 1": Asst Ref 1
+"Asst Ref 2": Asst Ref 2
+"Mentor":     Mentor
+"Standby":    Standby
+"Unassigned": Unassigned
+"Assignment Change Note (optional)": Assignment Change Note (optional)
+"Name": Name
+"Long name": Long Name
+"Longname": Long Name
+"Street1": Street1
+"Street2": Street2
+"City": City
+"State": State
+"Zip": Zip
+"Latitude": Latitude
+"Longitude": Longitude
+"POC Name": POC Name
+"Poc name": POC Name
+"Poc phone1": Poc phone1
+"Poc phone2": Poc phone2
+"POC Email": POC Email
+"Poc email1": POC Email1
+"Poc email2": POC Email2
+"Url": Url
+
+"Coach": Coach
+"Coachphone": Coach Phone
+"Coach Email": Coach Email
+"Alt POC Email": Alt POC Email
+"Colors": Colors
+"Agegroup": Age Group
+"Project": Project
+
+"Use Team's Region Rules?": Use Team's Region Rules?
+"Show Referee Region?": Show Referee Region?
+"Sport String (lowercase)": Sport String (lowercase)
+"Official Positions": Official Positions
+"Shortname": Short Name
+"Diffavail": Availiable Based on Difficulty
+"Diffvisable": Diffvisable
+"Diffreq": Diffreq
+
+"Ref Admin Name": Ref Admin Name
+"Ref Admin Email": Ref Admin Email
+
+"Username": Username
+"Firstname": First Name
+"Lastname": Last Name
+"Email": Email
+"Ayso id": AYSO ID
+"AYSO MY": AYSO MY
+"Badge": Badge
+"Youth?": Youth?
+"Referee?": Referee?
+"Referee Admin?": Referee Admin?
+"Scheduler?": Scheduler?
+"Assigner?": Assigner?
+"Super User?": Super User?
+"Enable?": Enable?
+"Phone home": Phone Home
+"Phone mobile": Phone Mobile
+"Game reminder email": Game Reminder Email
+"Game reminder text": Game Reminder Text
+
+"Difficulty": Difficulty
+"Points ref1": Points ref1
+"Points youth ref1": Points youth ref1
+"Points ref2": Points ref2
+"Points youth ref2": Points youth ref2
+"Points ref3": Points ref3
+"Points youth ref3": Points youth ref3
+"Points team goal": Points team goal
+
+"Subject": Subject
+"Body": Body
+
+"Status": Status
+"Inactive": Inactive
+"Normal": Normal
+"Complete": Complete
+"Cancelled": Cancelled
+"Suspended": Suspended
+"Rained out": Rained out
+"Forfeit": Forfeit
+"Postponed": Postponed
+"Home Score": Home Score
+"Away Score": Away Score
+"Alert Admin": Alert Admin
+"Scorecard Notes": Scorecard Notes
+
+"Date": Date
+"Time": Time
+"Published?": Published?
+"Home Team": Home Team
+"Away Team": Away Team
+"Number": Number
+"Length": Length
+"Timeslot Length": Timeslot Length
+"Short note": Short note
+"Ref1": Ref1
+"Ref2": Ref2
+"Ref3": Ref3
+"Ref4": Ref4
+"Ref5": Ref5
+"Referee Scorecard Notes": Referee Scorecard Notes
+"Home Colors": Home Colors
+"Away Colors": Away Colors
+"Archived?": Archived?
+"__name__label__": __name__label__
+"0": 0
+"1": 1
+"2": 2
+"3": 3
+"4": 4
+"Current Project": Current Project
+"Alert Admin?": Alert Admin?
+"Select Project": Select Project
+"Select Region": Select Region
+"Delivery date": Delivery date
+"Sent to": Sent to
+"Sent from": Sent from
+"Message": Message
+"Media type": Media type
+"Type": Type
+"Data": Data
+"User": User
+"Priority": Priority
+"AYSO ID must be a 8 or 9 digit number": AYSO ID must be a 8 or 9 digit number
+
+# Sombody has no label
+"": ""

@@ -1,0 +1,9 @@
+parameters:
+  scheduler_api_pin: 9345
+  
+services:
+  scheduler_api_projects_games_controller:
+    class: Scheduler\ApiBundle\Controller\ProjectsGamesController
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%scheduler_api_pin%'

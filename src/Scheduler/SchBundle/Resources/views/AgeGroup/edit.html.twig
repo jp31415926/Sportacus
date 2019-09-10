@@ -1,0 +1,23 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  {{ form_start(edit_form, {'action': path('agegroup_update', { 'id': entity.id }), 'attr': {'class': 'contact'} }) }}
+    {{ form_widget(edit_form) }}
+    <p>
+      <button type="submit" class="btn btn-primary btn-large">Update</button>
+    </p>
+  {{ form_end(edit_form) }}
+
+  {# <p><a href="{{ path('agegroup_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone Agegroup</a></p> #}
+  <p><a href="{{ path('agegroup') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+
+  {{ form_start(delete_form, {'action': path('agegroup_delete', { 'id': entity.id })}) }}
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn btn-danger" 
+            onclick="return confirm('Are you sure you want to delete this Age Group?');">Delete
+    </button>
+  {{ form_end(delete_form) }}
+{% endblock %}

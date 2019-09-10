@@ -1,0 +1,45 @@
+<h1>Project</h1>
+
+<table class="record_properties table table-condensed">
+  <tbody>
+  <tr>
+    <th>Id</th>
+    <td>{{ entity.id }}</td>
+  </tr>
+  <tr>
+    <th>Name</th>
+    <td>{{ entity.name }}</td>
+  </tr>
+  <tr>
+    <th>Long_name</th>
+    <td>{{ entity.longname }}</td>
+  </tr>
+  <tr>
+    <th>Start_date</th>
+    <td>{{ entity.startdate|date('Y-m-d H:i:s') }}</td>
+  </tr>
+  <tr>
+    <th>End_date</th>
+    <td>{{ entity.enddate|date('Y-m-d H:i:s') }}</td>
+  </tr>
+  </tbody>
+</table>
+
+<ul class="record_actions">
+  <li>
+    <a href="{{ path('project') }}">
+      Back to the list
+    </a>
+  </li>
+  <li>
+    <a href="{{ path('project_edit', { 'id': entity.id }) }}">
+      Edit
+    </a>
+  </li>
+  <li>
+    <form action="{{ path('project_delete', { 'id': entity.id }) }}" method="post">
+      {{ form_widget(delete_form) }}
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+</ul>

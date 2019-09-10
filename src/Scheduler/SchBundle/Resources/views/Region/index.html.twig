@@ -1,0 +1,34 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  <table class="records_list table table-hover table-condensed">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Long Name</th>
+      <th>POC Name</th>
+      <th>POC Email</th>
+      <th>Ref Admin Name</th>
+      <th>Ref Admin Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+      <tr>
+        <td><a href="{{ path('region_edit', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+        <td>{{ entity.longname }}</td>
+        <td>{{ entity.pocname }}</td>
+        <td>{{ entity.pocemail }}</td>
+        <td>{{ entity.refadminname }}</td>
+        <td>{{ entity.refadminemail }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ path('region_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create Region</a></p>
+{% endblock %}

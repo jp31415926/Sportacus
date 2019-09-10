@@ -1,0 +1,43 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  <table class="records_list table table-hover table-condensed">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Delivery_date</th>
+      <th>Date</th>
+      {#<th>Sent_to</th>#}
+      <th>Sent_from</th>
+      <th>Subject</th>
+      <th>Message</th>
+      <th>Media_type</th>
+      <th>Type</th>
+      <th>Data</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+      <tr>
+        <td><a href="{{ path('message_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+        <td>{% if entity.deliverydate %}{{ entity.deliverydate|date('Y-m-d H:i:s') }}{% endif %}</td>
+        <td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+        {# this is a collection: <td>{{ entity.sentto }}</td> #}
+        <td>{{ entity.sentfrom }}</td>
+        <td>{{ entity.subject }}</td>
+        <td>{{ entity.message }}</td>
+        <td>{{ entity.mediatype }}</td>
+        <td>{{ entity.type }}</td>
+        <td>{{ entity.data }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ path('message_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create Message</a></p>
+
+{% endblock %}

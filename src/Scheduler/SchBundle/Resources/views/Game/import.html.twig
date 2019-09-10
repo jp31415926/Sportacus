@@ -1,0 +1,21 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+
+{{ form_start(edit_form, {'action': path('game_import'), 'attr': {'class': 'contact'} }) }}
+    {{ form_widget(edit_form) }}
+  <p>
+    <button type="submit" class="btn btn-primary btn-large">Upload</button>
+  </p>
+{{ form_end(edit_form) }}
+
+  <p>
+{% for line in output %}
+{{ line|raw }}<br/>
+{% endfor %}
+  </p>
+
+<p><a href="{{ path('game') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the list</a></p>
+{% endblock %}

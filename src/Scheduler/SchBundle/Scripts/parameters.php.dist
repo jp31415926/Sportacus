@@ -1,0 +1,8 @@
+<?php
+$mysql_server = 'localhost';
+$myqsl_database = 'database';
+$mysql_user = 'user';
+$mysql_password = 'pass';
+
+$TROPO_DEV_KEY = '1c63425033';
+$TROPO_PROD_KEY = '1c63425030';

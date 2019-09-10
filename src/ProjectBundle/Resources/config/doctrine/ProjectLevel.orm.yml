@@ -1,0 +1,64 @@
+Cerad\Bundle\ProjectBundle\Entity\ProjectLevel:
+  type:  entity
+  table: project_levels
+    
+  uniqueConstraints:
+    project_level_project_name_index:
+        columns: project_id, name
+
+  id:
+    id:
+      type: integer
+      generator: { strategy: AUTO }
+            
+  manyToOne:
+    project:
+      targetEntity: Scheduler\SchBundle\Entity\Project
+      joinColumn:
+        name:                 project_id
+        referencedColumnName: id
+        nullable:             false
+
+  fields:
+    level_key:
+      column:   level_key
+      type:     string
+      length:   40
+      nullable: true
+    name:
+      column:   name
+      type:     string
+      length:   40
+      nullable: false
+    title:
+      column:   title
+      type:     string
+      length:   99
+      nullable: true
+
+    age:
+      column:   age
+      type:     string
+      length:   40
+      nullable: true
+    gender:
+      column:   gender
+      type:     string
+      length:   40
+      nullable: true
+    division:
+      column:   division
+      type:     string
+      length:   40
+      nullable: true
+
+    game_slot_length: # Playing time plus half time
+      column:   game_slot_length
+      type:     integer
+      nullable: true
+
+    crew_type:
+      column:   crew_type
+      type:     string
+      length:   40
+      nullable: true

@@ -1,0 +1,37 @@
+# U12 Boys pool A, Three teams, three games
+# Team A1 wins on fewest goals sllowed
+U12B_A:
+  -
+    id: 1
+    project_game_teams:
+      home:
+        project_team: { id: 100, name: 'One Hundred' }
+        round_slot: A1
+        report: {goals_scored: 2, goals_allowed: 0, player_ejections: 0, coach_ejections: 0 }
+      away:
+        project_team: { id: 200, name: 'Two Hundred' }
+        round_slot: A2
+        report: {goals_scored: 0, goals_allowed: 2, player_ejections: 0, coach_ejections: 0 }
+  -
+    id: 2
+    project_game_teams:
+      home:
+        project_team: { id: 200, name: 'Two Hundred' }
+        round_slot: A2
+        report: {goals_scored: 1, goals_allowed: 2, player_ejections: 0, coach_ejections: 0 }
+      away:
+        project_team: { id: 300, name: 'Three Hundred' }
+        round_slot: A3
+        report: {goals_scored: 2, goals_allowed: 1, player_ejections: 0, coach_ejections: 0 }
+  -
+    id: 3
+    project_game_teams:
+      home:
+        project_team: { id: 300, name: 'Three Hundred' }
+        round_slot: A3
+        report: {goals_scored: 1, goals_allowed: 1, player_ejections: 0, coach_ejections: 0 }
+      away:
+        project_team: { id: 100, name: 'One Hundred' }
+        round_slot: A1
+        report: {goals_scored: 1, goals_allowed: 1, player_ejections: 0, coach_ejections: 0 }
+

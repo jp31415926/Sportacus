@@ -1,0 +1,68 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>Location {{ entity.name }}</h1>
+
+  <table class="record_properties table table-condensed">
+    <tbody>
+    <tr>
+      <th>Full Name</th>
+      <td>{{ entity.longName }}</td>
+    </tr>
+    {% if entity.street1 or entity.street2 or entity.city or entity.state %}
+    <tr>
+      <th>Address</th>
+      <td>{{ entity.street1 }}{% if entity.street2 %}, {{ entity.street2 }}{% endif %}, {{ entity.city }}, {{ entity.state }} {{ entity.zip }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>GPS</th>
+      <td>{{ entity.latitude }}, {{ entity.longitude }}</td>
+    </tr>
+    {% if entity.url %}
+    <tr>
+      <th>Web</th>
+      <td>{{ entity.url }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Map</th>
+      <td>{# % set mapurl='q=' ~ entity.nameaddr|url_encode() ~ '%20@' ~ entity.latitude|url_encode() ~ ',' ~ entity.longitude|url_encode() ~ '&hl=en&t=h&z=19' % #}
+      {% set mapquery='q=' ~ entity.latitude|url_encode() ~ ',' ~ entity.longitude|url_encode() %}
+      <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?{{ mapquery }}&maptype=satellite&zoom=17&key=AIzaSyAvL7Jfi8b6sf05p-jQDaglvQi8b3QmpLQ" allowfullscreen></iframe>
+      {# <br /><a href="https://www.google.com/maps?{{ mapurl }}" class="btn btn-default" target="_blank">Click for map</a> #}
+      </td>
+    </tr>
+    <tr>
+      <th>Schedule</th>
+      <td><a href="{{ path('game', { 'loc': entity.name|url_encode() }) }}" class="btn btn-default">Location Schedule</a></td>
+    </tr>
+    <tr>
+      <th>Calendar</th>
+      <td>
+        <a href="webcal://sportac.us/ical/location/{{ entity.id }}"><img src="{{ asset('assets/images/calendar.gif') }}"> webcal://sportac.us/ical/location/{{ entity.id }}</a><br />
+        (Calendar how-to:
+        <a href="https://support.google.com/calendar/answer/37100" target="_blank">Google Calendar</a>,
+        <a href="http://help.yahoo.com/kb/index?page=content&id=SLN3849" target="_blank">Yahoo Calendar</a>,
+        <a href="http://office.microsoft.com/en-us/outlook-help/view-and-subscribe-to-internet-calendars-HA010167325.aspx#BM2" target="_blank">Microsoft Outlook</a>)</td>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <br/>
+  {% if is_granted("ROLE_ADMIN") %}
+    <p><a href="{{ path('location_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+    <a href="{{ path('location_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> New</a>
+    <a href="{{ path('location_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone</a></p>
+    <form action="{{ path('location_delete', { 'id': entity.id }) }}" method="post">
+      {{ form_widget(delete_form) }}
+      <button type="submit" class="btn btn-danger"
+              onclick="return confirm('Are you sure you want to delete this Location?');">Delete
+      </button>
+    </form>
+    <p><a href="{{ path('location') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+  {% endif %}
+
+{% endblock %}

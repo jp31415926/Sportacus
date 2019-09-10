@@ -1,0 +1,32 @@
+<h1>OffAssign list</h1>
+
+<table class="records_list">
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>Game</th>
+    <th>Referee</th>
+    <th>Asst Referee 1</th>
+    <th>Asst Referee 2</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for entity in entities %}
+    <tr>
+      <td><a href="{{ path('offassign_edit', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+      <td>{{ entity.game }}</td>
+      <td>{{ entity.ref }}</td>
+      <td>{{ entity.ar1 }}</td>
+      <td>{{ entity.ar2 }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<ul>
+  <li>
+    <a href="{{ path('offassign_new') }}">
+      Create a new entry
+    </a>
+  </li>
+</ul>

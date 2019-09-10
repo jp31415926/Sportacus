@@ -1,0 +1,6 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}Email Project Game{% endblock %}
+{% block body %}
+  {% if not flash is null %}<h3>{{ flash }}</h3>{% endif %}
+  {{ emailForm.render | raw }}
+{% endblock %}

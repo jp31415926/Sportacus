@@ -1,0 +1,24 @@
+The following message was posted for Game {{ game.number }} by {{ user.getFullName() }}:
+
+{{ msg }}
+
+Project: {{ game.getProject() }}
+Home: {{ game.getTeam1() }}
+Away: {{ game.getTeam2() }}
+Date: {{ game.date|date('l, F j, Y') }}
+Time: {{ game.time|date('g:i A') }}
+Location: {{ game.location }}
+Status: {{ game.getStatusString() }}
+
+Officials assigned to this game:
+{% set count = 0 %}
+{% for ref in refs %}
+{% if ref %}{{ positions[loop.index0] }}: {{ ref }}
+{% set count=count+1 %}{% endif %}
+{% endfor %}
+{% if count == 0 %}
+None
+{% endif %}
+
+Thanks for using Sportac.us!
+http://sportac.us

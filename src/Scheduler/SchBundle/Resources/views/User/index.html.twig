@@ -1,0 +1,48 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+  <table class="records_list table table-bordered table-condensed">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>AYSO ID</th>
+      <th>Email</th>
+      <th>Home Phone</th>
+      <th>Mobile Phone</th>
+      <th>Region</th>
+      <th>AYSO MY</th>
+      <th>Badge</th>
+      <th>Flags</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+      {% set color="" %}
+      {% if entity.enabled == 0 %}{% set color="error" %}{% endif %}
+      {% if entity.rolereferee == 1 %}{% set color="success" %}{% endif %}
+      <tr{% if color %} class="{{ color }}"{% endif %}>
+        <td><a href="{{ path('user_edit', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+        <td>{{ entity.username }}</td>
+        <td>{{ entity.getLastNameFirstName() }}</td>
+        <td>{{ entity.aysoid }}</td>
+        <td>{{ entity.email }}</td>
+        <td>{{ entity.phonehome }}</td>
+        <td>{{ entity.phonemobile }}</td>
+        <td>{% if entity.region %}{{ entity.region.getName() }}{% endif %}</td>
+        <td>{{ entity.aysomy }}</td>
+        <td>{{ entity.badge }}</td>
+        <td>{{ entity.enabled ? 'E' : 'e' }}{{ entity.rolereferee ? 'R' : '_' }}{{ entity.isyouth ? 'Y' : '_' }}{{ entity.rolescheduler ? 'S' : '_' }}{{ entity.roleassigner ? 'A' : '_' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="noprint">
+    <p><a href="{{ path('user_export_csv') }}"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span> CSV Export</button></a></p>
+  </div>
+{% endblock %}

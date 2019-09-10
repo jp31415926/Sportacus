@@ -1,0 +1,14 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+  {{ form_start(form, {'action': path('location_create'), 'attr': {'class': 'contact'} }) }}
+    {{ form_widget(form) }}
+    <p>
+      <button type="submit" class="btn btn-primary btn-large">Create</button>
+    </p>
+  {{ form_end(form) }}
+
+  <p><a href="{{ path('location') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the list</a></p>
+{% endblock %}

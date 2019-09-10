@@ -1,0 +1,31 @@
+#parameters:
+#    scheduler.example.class: Scheduler\SchBundle\Example
+
+#services:
+#    scheduler.example:
+#        class: %scheduler.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+services:
+    user.registration.form.type:
+        class: Scheduler\SchBundle\Form\RegistrationFormType
+        arguments: ['%fos_user.model.user.class%']
+        tags:
+            - { name: form.type, alias: user_registration }
+
+    user.profile.form.type:
+        class: Scheduler\SchBundle\Form\ProfileFormType
+        arguments: ['%fos_user.model.user.class%']
+        tags:
+            - { name: form.type, alias: user_profile }
+
+    kernel.listener.email_confirmation:
+        class: Scheduler\SchBundle\EventSubscriber\RegisteredUserSubscriber
+        arguments: ['@mailer']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    scheduler.twig.SchBundle_twig_extension:
+        class: Scheduler\SchBundle\Twig\TwigExtensions
+        tags:
+            - { name: twig.extension }

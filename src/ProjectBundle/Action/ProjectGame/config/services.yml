@@ -1,0 +1,149 @@
+# ProjectGame/services.yml
+services:
+
+  sportacus_project_game_connection_dbal:
+    alias: doctrine.dbal.sportacus_connection
+
+  sportacus_project_game_entity_manager_doctrine:
+    alias: doctrine.orm.default_entity_manager
+
+  sportacus_project_game_repository_doctrine:
+    class:  Cerad\Bundle\ProjectBundle\EntityRepository\ProjectGameRepository
+    factory: ['@sportacus_project_game_entity_manager_doctrine', 'getRepository']
+    arguments:
+      - 'Scheduler\SchBundle\Entity\Game'
+
+  sportacus_project_game_repository_sql:
+    class:  Cerad\Bundle\ProjectBundle\EntityRepository\ProjectGameRepositorySql
+    arguments:
+      - '@sportacus_project_game_connection_dbal'
+
+  sportacus_project_game_repository:
+     alias: sportacus_project_game_repository_doctrine
+
+  sportacus_project_game_swap_command:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Update\SwapCommand
+    tags:  [{ name: console.command }]
+    arguments:
+      - '@sportacus_project_game_connection_dbal'
+
+  sportacus_project_game_twig_extension:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Twig\TwigExtension
+    tags:  [{ name: twig.extension }]
+
+  sportacus_project_game_security_voter:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Security\ProjectGameVoter
+    tags:  [{ name: security.voter }]
+    arguments:
+      - '@security.role_hierarchy'
+
+# =====================================================
+# Reminders
+  sportacus_project_game_reminder_email_command:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Reminder\GameReminderEmailCommand
+    tags:  [{ name: console.command }]
+    arguments:
+      - '@sportacus_project_game_repository_sql'
+      - '@mailer'
+      - '@sportacus_project_game_twig_extension'
+
+  sportacus_project_game_reminder_text_command:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Reminder\GameReminderTextCommand
+    tags:  [{ name: console.command }]
+    arguments:
+      - '@sportacus_project_game_repository_sql'
+      - '%tropo_dev_key%'
+      - '%tropo_prod_key%'
+
+# =====================================================
+# Project Game Importer
+  sportacus_project_game_import_command:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Import\ImportCommand
+    tags:  [{ name: console.command }]
+    arguments:
+      - '@sportacus_project_game_loader_excel'
+      - '@sportacus_project_game_saver_sql'
+
+  sportacus_project_game_import_controller:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Import\ImportController
+    calls: [[setContainer, ['@service_container']]]
+    arguments:
+      - '@sportacus_project_game_repository_sql'
+      - '@sportacus_project_game_loader_excel'
+      - '@sportacus_project_game_saver_sql'
+
+  sportacus_project_game_importer_excel:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Import\ImporterExcel
+    arguments:
+      - '@sportacus_project_game_repository_sql'
+
+  sportacus_project_game_saver_sql:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Import\SaverSql
+    arguments:
+      - '@sportacus_project_game_repository_sql'
+
+  sportacus_project_game_loader_excel:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Import\LoaderExcel
+    arguments:
+      - '@sportacus_project_game_loader_repository'
+
+  sportacus_project_game_loader_repository:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Import\LoaderRepository
+    arguments:
+      - '@sportacus_project_game_connection_dbal'
+
+# =====================================================
+# Project Game Exporter
+  sportacus_project_game_export_command:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Export\ExportCommand
+    tags:  [{ name: console.command }]
+    arguments:
+      - '@sportacus_project_game_exporter_excel'
+
+  sportacus_project_game_export_controller:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Export\ExportController
+    calls: [[setContainer, ['@service_container']]]
+    arguments:
+      - '@sportacus_project_game_exporter_excel'
+
+  sportacus_project_game_exporter_excel:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Export\ExporterExcel
+    arguments:
+      - '@sportacus_project_game_export_repository'
+
+  sportacus_project_game_export_repository:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Export\ExportRepository
+    arguments:
+      - '@sportacus_project_game_connection_dbal'
+
+# =====================================================
+# ProjectGameShow
+  sportacus_project_game_show_controller:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Show\ShowController
+    calls: [[setContainer, ['@service_container']]]
+    arguments:
+      - '%framework_prefix%'
+      - '@sportacus_project_game_repository_sql'
+      - '@sportacus_project_game_show_content_component'
+
+  sportacus_project_game_show_content_component:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Show\ShowContentComponent
+    arguments:
+      - '@sportacus_project_game_twig_extension'
+      - '@router'
+      - '@security.authorization_checker'
+
+# =====================================================
+# ProjectGameEmail
+  sportacus_project_game_email_controller:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Email\EmailController
+    calls: [[setContainer, ['@service_container']]]
+    arguments:
+      - '@sportacus_project_game_repository_sql'
+      - '@sportacus_project_game_email_form'
+
+  sportacus_project_game_email_form:
+    class: Cerad\Bundle\ProjectBundle\Action\ProjectGame\Email\EmailForm
+    arguments:
+      - '@sportacus_project_game_twig_extension'
+      - '@security.token_storage'

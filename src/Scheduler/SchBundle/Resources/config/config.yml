@@ -1,0 +1,6 @@
+# src/Scheduler/SchBundle/Resources/config/config.yml
+parameters:
+    # Scheduler contact email address
+    scheduler.contact.emails.from: contactus@sportac.us
+    scheduler.contact.emails.to:   john.price@ayso894.net
+

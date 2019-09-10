@@ -1,0 +1,47 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}Agegroup list{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  <table class="records_list table table-hover table-condensed">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Difficulty</th>
+      <th>Region</th>
+      <th>Project</th>
+      <th>Ref1 Pts</th>
+      <th>Youth Ref1 Pts</th>
+      <th>Ref2 Pts</th>
+      <th>Youth Ref2 Pts</th>
+      <th>Ref3 Pts</th>
+      <th>Youth Ref3 Pts</th>
+      <th>Team Pts Goal</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+      <tr>
+        <td><a href="{{ path('agegroup_edit', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+        <td>{{ entity.difficulty }}</td>
+        <td>{% if entity.region %}{{ entity.region.name }}{% endif %}</td>
+        <td>{{ entity.project }}</td>
+        <td>{{ entity.pointsref1 }}</td>
+        <td>{{ entity.pointsyouthref1 }}</td>
+        <td>{{ entity.pointsref2 }}</td>
+        <td>{{ entity.pointsyouthref2 }}</td>
+        <td>{{ entity.pointsref3 }}</td>
+        <td>{{ entity.pointsyouthref3 }}</td>
+        <td>{{ entity.pointsteamgoal }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ path('agegroup_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create Age Group</a></p>
+  {#<p><a href="{{ path('avro_csv_import_upload', {'alias': 'agegroup'}) }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-up"></i> CSV Import</a></p>#}
+  <p><a href="{{ path('agegroup_export_csv') }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-down"></i> CSV Export</a></p>
+
+{% endblock %}

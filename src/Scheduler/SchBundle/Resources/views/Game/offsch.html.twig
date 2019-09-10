@@ -1,0 +1,304 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {# <link href="{{ asset('assets/css/jquery.dataTables.css') }}" rel="stylesheet" />
+  <script src="{{ asset('assets/js/jquery.dataTables.js') }}"></script> #}
+  <script>
+{#    function clearform() {
+      var d = new Date();
+      var date1 = d.getFullYear() + "-"
+        + ('0' + (d.getMonth() + 1)).slice(-2) + "-"
+        + ('0' + d.getDate()).slice(-2);
+      d.setDate(d.getDate() + 7);
+      var date2 = d.getFullYear() + "-"
+        + ('0' + (d.getMonth() + 1)).slice(-2) + "-"
+        + ('0' + d.getDate()).slice(-2);
+      $("#scheduler_schbundle_gamelistcriteriatype_start_date").val(date1);
+      $("#scheduler_schbundle_gamelistcriteriatype_end_date").val(date2);
+      $("#scheduler_schbundle_gamelistcriteriatype_official").val("");
+      $("#scheduler_schbundle_gamelistcriteriatype_coach").val("");
+      $("#scheduler_schbundle_gamelistcriteriatype_location").val("");
+
+      return true;
+    }
+#}
+    $(function () {
+      $(".datepicker").datepicker({
+        showOn: "button",
+        buttonImage: "{{ asset('assets/images/calendar.gif') }}",
+        buttonImageOnly: true,
+        dateFormat: "yy-mm-dd",
+        showOtherMonths: true,
+        changeMonth: true,
+        changeYear: true
+      });
+			$( document ).tooltip();
+      {#
+        $(".records_list").dataTable({
+          "bPaginate": true,
+          "bLengthChange": false,
+          "bFilter": false,
+          "bSort": true,
+          "bInfo": false,
+          "bAutoWidth": false,
+        });#}
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+  <style type="text/css">
+    .override-table td {
+      border: none !important;
+      /*border-width: 0;*/
+      line-height: 1em;
+    }
+
+    .dark-border-table td, th {
+      border: 1px solid;
+      /*border-color: rgb(0, 0, 0);*/
+      white-space: nowrap;
+    }
+		.ui-tooltip { white-space: pre-line; }
+  </style>
+  <h1>{{ title }}</h1>
+  <p>Current as of {{ "now"|date("Y-m-d H:i:s") }}</p>
+  <div class="noprint">
+
+    {{ form_start(form, {'attr': {'class' : 'gamesearch', 'id': 'gamesearch'}}) }}
+    {#{ form_widget(form) }#}
+      {{ form_errors(form) }}
+
+      <div>
+        {{ form_label (form.start_date) }}
+        {{ form_errors(form.start_date) }}
+        {{ form_widget(form.start_date, { 'attr': {'class': 'datepicker'} }) }}
+
+        <button type="submit" class="btn btn-primary">Search</button>
+{#        <button onclick="return clearform();" class="btn btn-default">Reset to default</button>#}
+        <a href="reset"><button type="button" class="btn btn-default">Reset to default</button></a>
+      </div>
+
+      <div>
+        {{ form_label (form.end_date) }}
+        {{ form_errors(form.end_date) }}
+        {{ form_widget(form.end_date, { 'attr': {'class': 'datepicker'} }) }}
+      </div>
+
+    {{ form_end(form) }}
+
+
+    <p>To print: You should be able to print the schedule directly from
+      this page. Please report any problems you have.</p>
+    {% if is_granted("ROLE_REF") %}
+      <p><strong>Referees: If you want to Referee a game, please click the links
+          to the right of the game you want to referee.</strong></p>
+    {% endif %}
+    {% if is_granted("ROLE_SCHEDULER") %}
+      <p><strong>Schedulers: If you want to edit a game's details, click the
+          Game number</strong></p>
+    {% endif %}
+  </div>
+
+  <strong>{{ games|length }} Games{% if stats.gameConflicts > 0 %},
+    {{ stats.gameConflicts }} game conflicts{% endif %}{% if stats.teamConflicts > 0 %},
+      {{ stats.teamConflicts }} team conflicts{% endif %}{% if
+    stats.refConflicts > 0 %}, {{ stats.refConflicts }} official conflicts{% endif %}</strong>
+
+  <table class="records_list table table-condensed table-hover dark-border-table">
+    <thead>
+    <tr>
+      <th>Game</th>
+      <th>Date / Status</th>
+      <th>Location / Length</th>
+      <th>Score</th>
+      <th>Home / Away</th>
+      <th>Official Team</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set lastday='' %}
+    {% for game in games %}
+      {% set ref_pos_count = 0 %}
+      {% if game.agegroup %}
+        {% set difficulty = game.agegroup.difficulty %}
+      {% else %}
+        {% set difficulty = 0 %}
+      {% endif %}
+
+      {% for refpos in game.project.offpositions %}
+        {% if difficulty >= refpos.diffavail %}
+          {% set ref_pos_count = ref_pos_count + 1 %}
+        {% endif %}
+      {% endfor %}
+      {% if ref_pos_count > 0 %}
+        {% set gameconflicts=game.getGameConflicts() %}
+        {% set team1conflicts=game.getTeam1Conflicts() %}
+        {% set team2conflicts=game.getTeam2Conflicts() %}
+        {% set refconflicts = [ game.getRef1Conflicts(), game.getRef2Conflicts(), game.getRef3Conflicts(), game.getRef4Conflicts(), game.getRef5Conflicts()] %}
+        {#% if lastday and (lastday != game.date|date('D M j Y')) %#}
+        {% if lastday != game.date|date('M j Y') %}
+          <tr>
+            {# <td colspan="6"></td> #}
+            <td colspan="6">{{ game.date|date('l, F j Y') }}</td>
+          </tr>
+        {% endif %}
+        {% set lastday=game.date|date('M j Y') %}
+        {% set color=game.getStatusColor() %}
+        <tr{% if color %} class="{{ color }}"{% endif %}>
+          <td>
+            {% if gameconflicts %}
+              <img src="{{ asset('assets/img/exclamation-octagon.png') }}" title="Game conflicts:{% for c in gameconflicts %} {{ c.number }}{% endfor %}">
+            {% endif %}
+            {# if game.number %}{% set number=game.number %}{% else %}{% set number=game.id %}{% endif %} #}
+            {# if is_granted("ROLE_SCHEDULER") and (app.user.currentproject == game.project) #}
+            {% if is_granted("edit",game) %}
+              <a href="{{ path('game_edit', { 'id': game.id }) }}">{{ game | project_game_number }}</a>
+            {% else %}
+              {{ game | project_game_number }}
+            {% endif %}
+            <br/>{{ game.project.name }}
+            <br/>{{ game.region.name  }}
+          </td>
+
+          {# <td>{{ game.date|date('D M j Y') }} {{ game.time|date('h:i A') }}<br/>{{ game.getStatusString() }}</td> #}
+          <td>{{ game.time|date('h:i A') }}<br/>{{ game.getStatusString() }}</td>
+
+          <td{% if game.location and game.location.longname %} title="{{ game.location.longname }}"{% endif %}>
+            {% if game.location %}<a href="{{ path('location_show', { 'id': game.location.id }) }}">{{ game.location }}</a>{% endif %}
+            {% if game.length and game.timeslotlength %}
+              <br/>{{ game.length }}/{{ game.timeslotlength }} min
+            {% elseif game.timeslotlength %}
+              <br/>{{ game.length }} min
+            {% elseif game.timeslotlength %}
+              <br/>{{ game.timeslotlength }} min slot
+            {% endif %}</td>
+
+          {% if is_granted("ROLE_REF") %}
+            <td><a href="{{ path('game_scorecard', { 'id': game.id }) }}"{% if game.refNotes %} title="{{ game.refNotes|striptags }}"{% endif %}>
+                {{ game.projectGameTeamHome | project_game_team_score }} {% if game.refNotes %}{% if game.alertAdmin %}<strong>[!N!]</strong>{% else %}[N]{% endif %}{% endif %}<br/>
+                {{ game.projectGameTeamAway | project_game_team_score }}</a></td>
+          {% else %}
+            <td>{{ game.projectGameTeamHome | project_game_team_score }}<br/>{{ game.projectGameTeamAway | project_game_team_score }}</td>
+          {% endif %}
+
+					{% set colorsH,colorsA='Unknown','Unknown' %}
+					{% if game.team1 and game.team1.colorsHome %}{% set colorsH=game.team1.colorsHome %}{% endif %}
+					{% if game.team2 %}
+						{% if game.team2.colorsAway %}{% set colorsA=game.team2.colorsAway %}
+						{% elseif game.team2.colorsHome %}{% set colorsA=game.team2.colorsHome %}{% endif %}
+					{% endif %}
+					<td>
+            {% if team1conflicts %}
+              <img src="{{ asset('assets/img/exclamation-octagon.png') }}" title="Team has game conflicts:{% for c in team1conflicts %} {{ c.number }}{% endfor %}">
+            {% endif %}
+            <img src="{{ asset('colorsquare.php?color1=' ~ colorsH) }}" width="16" height="16" title="{{ colorsH }}">{% if game.team1 %} <a href="{{ path('team_show', { 'id': game.team1.id }) }}">{{ game.team1 }}</a>{% endif %}<br/>
+            {% if team2conflicts %}
+              <img src="{{ asset('assets/img/exclamation-octagon.png') }}" title="Team has game conflicts:{% for c in team2conflicts %} {{ c.number }}{% endfor %}">
+            {% endif %}
+            <img src="{{ asset('colorsquare.php?color1=' ~ colorsA) }}" width="16" height="16" title="{{ colorsA }}">{% if game.team2 %} <a href="{{ path('team_show', { 'id': game.team2.id }) }}">{{ game.team2 }}</a>{% endif %}{% if game.shortnote %}
+              <br/><b>{{ game.shortnote }}</b>{% endif %}</td>
+
+          {#{% set refs_req = game.getReqOfficials() %}
+          {% set refs_max = game.getMaxOfficials() %}#}
+          {% set bgcolor = 0 %}
+          {% set officials = game.getOfficials() %}
+          {% set officials_assigned,officials_total = 0,0 %}
+          {% for refpos in game.project.offpositions %}
+            {% if difficulty >= refpos.diffavail %}
+              {% set officials_total = officials_total + 1 %}
+            {% endif %}
+            {% if not officials[loop.index0] %}
+              {% if (difficulty >= refpos.diffreq) and (bgcolor < 2) %}{% set bgcolor = 2 %}{% endif %}
+              {% if (difficulty >= refpos.diffvisable) and (bgcolor < 1) %}{% set bgcolor = 1 %}{% endif %}
+            {% else %}
+              {% if loop.index < 4 %}
+                {% set officials_assigned = officials_assigned + 1 %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {#jp - do it the old way for now, ignoring required settings #}
+          {% set bgcolor = 0 %}{# green #}
+          {% if officials_total > 3 %}{% set officials_total = 3 %}{% endif %}
+          {% if officials_total > officials_assigned %}
+            {% set bgcolor = 1 %}{# yellow #}
+          {% endif %}
+          {% if (officials_total > 0) and (officials_assigned == 0) %}
+            {% if difficulty >= 80 %}
+              {% set bgcolor = 2 %}{# red #}
+            {% else %}
+              {% set bgcolor = 1 %}{# yellow #}
+            {% endif %}
+          {% endif %}
+
+          {% set bgcolor = ['#80ff80', '#ffff80', '#ff8080']|slice(bgcolor,1) %}
+          <td bgcolor="{{ bgcolor[0] }}">
+            {% set refc = [] %}
+
+            {% if game.project.getShowRefereeRegion() %}
+              {% for i in 0 %}
+                {% set ref = officials[i] %}
+                {% if ref and (game.team1.region == ref.region or game.team2.region == ref.region) %}
+                  {% set refc = refc|merge( {(i):'<img src="' ~ asset('assets/img/cross-circle.png') ~ '" title="Official has region conflict with team">'}) %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {% for refpos in 0..4 %}
+              {% set rc = '' %}
+              {% if refconflicts[refpos] %}
+                {% for c in refconflicts[refpos] %}{% set rc = rc ~ ' ' ~ c.number %}
+                {% endfor %}
+                {% set rc = '<img src="' ~ asset('assets/img/exclamation-octagon.png') ~ '" title="Official has game conflicts:' ~ rc ~ '">' %}
+                {% set rc1 = { (refpos): rc } %}
+              {% endif %}
+              {% set refc = refc|merge([rc]) %}
+            {% endfor %}
+            {% if game.project.getShowRefereeRegion() %}
+              {% if game.ref1 %}{% set ref1=game.ref1.getFullNameAndRegion() %}{% else %}{% set ref1='' %}{% endif %}
+              {% if game.ref2 %}{% set ref2=game.ref2.getFullNameAndRegion() %}{% else %}{% set ref2='' %}{% endif %}
+              {% if game.ref3 %}{% set ref3=game.ref3.getFullNameAndRegion() %}{% else %}{% set ref3='' %}{% endif %}
+              {% if game.ref4 %}{% set ref4=game.ref4.getFullNameAndRegion() %}{% else %}{% set ref4='' %}{% endif %}
+              {% if game.ref5 %}{% set ref5=game.ref5.getFullNameAndRegion() %}{% else %}{% set ref5='' %}{% endif %}
+            {% else %}
+              {% if game.ref1 %}{% set ref1=game.ref1.getFullNameAndBadge() %}{% else %}{% set ref1='' %}{% endif %}
+              {% if game.ref2 %}{% set ref2=game.ref2.getFullNameAndBadge() %}{% else %}{% set ref2='' %}{% endif %}
+              {% if game.ref3 %}{% set ref3=game.ref3.getFullNameAndBadge() %}{% else %}{% set ref3='' %}{% endif %}
+              {% if game.ref4 %}{% set ref4=game.ref4.getFullNameAndBadge() %}{% else %}{% set ref4='' %}{% endif %}
+              {% if game.ref5 %}{% set ref5=game.ref5.getFullNameAndBadge() %}{% else %}{% set ref5='' %}{% endif %}
+            {% endif %}
+            {% set refs = [ref1,ref2,ref3,ref4,ref5] %}
+
+            {% if is_granted("ROLE_REF") %}
+              {% for refpos in game.project.offpositions %}
+                {#<!-- diffavail={{refpos.diffavail}}:diffvisable={{ refpos.diffvisable }}:{{loop.index0}}:{{ refs[loop.index0] }}:{{ refc[loop.index0]|raw }} -->#}
+                {% if difficulty >= refpos.diffavail %}
+                  {% if (difficulty >= refpos.diffvisable) or refs[loop.index0] %}{{ refc[loop.index0]|raw }} <a href="{{ path('game_assign', { 'id': game.id }) }}">{{ refpos.shortname }}:</a> {{ refs[loop.index0]|raw }}<br/>{% endif %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% for refpos in game.project.offpositions %}
+                {% if difficulty >= refpos.diffavail %}
+                  {% if difficulty >= refpos.diffvisable or refs[loop.index0] %}{{ refc[loop.index0]|raw }}{{ refpos.shortname }}: {{ refs[loop.index0]|raw }}
+                    <br/>{% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    </tbody>
+  </table>
+  <div class="noprint">
+    {% if is_granted("ROLE_SCHEDULER") %}
+      <p><a href="{{ path('game_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create Game</a></p>
+      <p><a href="{{ path('game_import') }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-up"></i> CSV Import</a></p>
+    {% endif %}
+    <p><a href="{{ path('game_export_csv') }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-down"></i> CSV Export</a></p>
+  </div>
+{% endblock %}

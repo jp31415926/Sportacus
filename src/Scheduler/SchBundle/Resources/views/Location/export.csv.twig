@@ -1,0 +1,4 @@
+id,Name,Street1,Street2,City,State,Zip,Latitude,Longitude,Poc_name,Poc_phone1,Poc_phone2,Poc_email1,Poc_email2
+{% for row in data %}
+  {{ row.id }},{{ row.name }},{{ row.street1 }},{{ row.street2 }},{{ row.city }},{{ row.state }},{{ row.zip }},{{ row.latitude }},{{ row.longitude }},{{ row.pocname }},{{ row.pocphone1 }},{{ row.pocphone2 }},{{ row.pocemail1 }},{{ row.pocemail2 }},{{ row.url }}
+{% endfor %}

@@ -1,0 +1,6 @@
+{% autoescape false %}
+id,Username,FirstName,LastName,Email,HomePhone,MobilePhone,Region,AYSOID,AYSOMY,Badge,Enabled,Referee,Youth,RefAdmin,Scheduler,Assigner
+{% for r in data %}
+  {{ r.id }},{{ r.username }},{{ r.firstName|csvQuote }},{{ r.lastName|csvQuote }},{{ r.email|csvQuote }},{{ r.phonehome|csvQuote }},{{ r.phonemobile|csvQuote }},{% if r.region %}{{ r.region.name|csvQuote }}{% endif %},{{ r.aysoid|csvQuote }},{{ r.aysomy|csvQuote }},{{ r.badge|csvQuote }},{{ r.enabled?'Y':'N' }},{{ r.rolereferee?'Y':'N' }},{{ r.isyouth?'Y':'N' }},{{ r.rolerefereeadmin?'Y':'N' }},{{ r.rolescheduler?'Y':'N' }},{{ r.roleassigner?'Y':'N' }}
+{% endfor %}
+{% endautoescape %}

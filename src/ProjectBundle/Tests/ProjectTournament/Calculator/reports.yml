@@ -1,0 +1,7 @@
+area5c:
+  - {goals_scored: 1, goals_allowed: 0, player_ejections: 0, coach_ejections: 0, points:  7}
+  - {goals_scored: 1, goals_allowed: 0, player_ejections: 0, coach_ejections: 0, points:  7}
+  - {goals_scored: 2, goals_allowed: 2, player_ejections: 0, coach_ejections: 0, points:  5}
+  - {goals_scored: 1, goals_allowed: 3, player_ejections: 0, coach_ejections: 0, points:  1}
+  - {goals_scored: 1, goals_allowed: 0, player_ejections: 2, coach_ejections: 0, points:  3}
+  - {goals_scored: 0, goals_allowed: 1, player_ejections: 0, coach_ejections: 1, points: -3}

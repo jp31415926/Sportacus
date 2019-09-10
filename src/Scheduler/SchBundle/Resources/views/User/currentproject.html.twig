@@ -1,0 +1,14 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  {{ form_start(form, {'attr': {'class': 'contact'} }) }}
+    {{ form_widget(form) }}
+    <p>
+      <button type="submit" class="btn btn-primary btn-large">Update</button>
+    </p>
+  {{ form_end(form) }}
+
+{% endblock %}

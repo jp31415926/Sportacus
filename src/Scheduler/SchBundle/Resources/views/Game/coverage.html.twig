@@ -1,0 +1,138 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {#<link href="{{ asset('assets/css/jquery.dataTables.css') }}" rel="stylesheet" />
+  <script src="{{ asset('assets/js/jquery.dataTables.js') }}"></script>#}
+  <script>
+    $(function () {
+      $(".datepicker").datepicker({
+        showOn: "button",
+        buttonImage: "{{ asset('assets/images/calendar.gif') }}",
+        buttonImageOnly: true,
+        dateFormat: "yy-mm-dd",
+        showOtherMonths: true,
+        changeMonth: true,
+        changeYear: true
+      });
+			$( document ).tooltip();
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+  <style type="text/css">
+    .override-table td {
+      border: none !important;
+      /*border-width: 0;*/
+      line-height: 1em;
+    }
+
+    .dark-border-table td, th {
+      border: 1px solid;
+      /*border-color: rgb(0, 0, 0);*/
+      white-space: nowrap;
+    }
+		.ui-tooltip { white-space: pre-line; }
+  </style>
+  <h1>{{ title }}</h1>
+  <p>Current as of {{ "now"|date("Y-m-d H:i:s") }}</p>
+  <div class="noprint">
+
+    {{ form_start(form, {'attr': {'class' : 'gamesearch', 'id': 'gamesearch'}}) }}
+      {{ form_errors(form) }}
+
+      <div>
+        {{ form_label (form.start_date) }}
+        {{ form_errors(form.start_date) }}
+        {{ form_widget(form.start_date, { 'attr': {'class': 'datepicker', 'tabindex': '1'} }) }}
+
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="reset"><button type="button" class="btn btn-default">Reset to default</button></a>
+
+      </div>
+
+      <div>
+        {{ form_label (form.end_date) }}
+        {{ form_errors(form.end_date) }}
+        {{ form_widget(form.end_date, { 'attr': {'class': 'datepicker', 'tabindex': '2'} }) }}
+      </div>
+
+    {{ form_end(form) }}
+  </div>
+  <br/>
+  {% if region %}
+  Home Games ({{ region }}):
+  <table class="table table-condensed table-hover" border="1" cellpadding="2">
+    <thead>
+    <tr>
+      <th>Division</th>
+      <th>CR</th>
+      <th>AR1</th>
+      <th>AR2</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for index,stat in slots_assigned %}
+      <tr>
+        <td>{{ index }}</td>
+        {% for index2 in [0,1,2] %}
+          {% if slots_percent[index][index2] is defined %}
+            <td>{{ slots_percent[index][index2] }}% ({{ slots_assigned[index][index2] }}
+              of {{ slots_total[index][index2] }})
+            </td>
+          {% else %}
+            <td>-</td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    <tr>
+      <td><b>Total</b></td>
+      {% for index,stat in total_assigned %}
+        <td><b>{{ total_percent[index] }}% ({{ stat }} of {{ total_slots[index] }})</b></td>
+      {% endfor %}
+    </tr>
+    </tbody>
+  </table>
+  <br/>
+  Away Games:
+  {% else %}
+  All Games:
+  {% endif %}
+  <table class="table table-condensed table-hover" border="1" cellpadding="2">
+    <thead>
+    <tr>
+      <th>Division</th>
+      <th>CR</th>
+      <th>AR1</th>
+      <th>AR2</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for index,stat in slots_assigned2 %}
+      <tr>
+        <td>{{ index }}</td>
+        {% for index2 in [0,1,2] %}
+          {% if slots_percent2[index][index2] is defined %}
+            <td>{{ slots_percent2[index][index2] }}% ({{ slots_assigned2[index][index2] }}
+              of {{ slots_total2[index][index2] }})
+            </td>
+          {% else %}
+            <td>-</td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    <tr>
+      <td><b>Total</b></td>
+      {% for index,stat in total_assigned2 %}
+        <td><b>{{ total_percent2[index] }}% ({{ stat }} of {{ total_slots2[index] }})</b></td>
+      {% endfor %}
+    </tr>
+    </tbody>
+  </table>
+
+{% endblock %}

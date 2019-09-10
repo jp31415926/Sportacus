@@ -1,0 +1,71 @@
+Cerad\Bundle\ProjectBundle\Entity\ProjectGameTeam:
+  type:  entity
+  table: project_game_teams
+  #repositoryClass: Cerad\Bundle\GameBundle\Doctrine\EntityRepository\ProjectGameTeamRepository
+    
+  uniqueConstraints:
+    project_game__project_game_team__slot_index:
+        columns: project_game_id, slot
+
+  id:
+    id:
+      type: integer
+      generator: { strategy: AUTO }
+            
+  manyToOne:
+    projectGame:
+      targetEntity: Scheduler\SchBundle\Entity\Game
+      inversedBy:   projectGameTeams
+      joinColumn:
+        name:                 project_game_id
+        referencedColumnName: id
+        nullable:             false
+    projectTeam:
+      targetEntity: Scheduler\SchBundle\Entity\Team
+    #inversedBy:   projectGameTeams
+      joinColumn:
+        name:                 project_team_id
+        referencedColumnName: id
+        nullable:             true
+    projectLevel:
+      targetEntity: Cerad\Bundle\ProjectBundle\Entity\ProjectLevel
+      joinColumn:
+        name:                 project_level_id
+        referencedColumnName: id
+        nullable:             true
+  fields:
+    slot:
+      column:   slot
+      type:     string
+      length:   20
+      nullable: false
+    score:
+      column:   score
+      type:     integer
+      nullable: true
+    source:
+      column:   source
+      type:     string
+      length:   99
+      nullable: true
+    conduct:
+      column:   conduct
+      type:     array
+      nullable: true
+
+    roundType:
+      column:   round_type
+      type:     string
+      length:   20
+      nullable: true
+    roundName:
+      column:   round_name
+      type:     string
+      length:   20
+      nullable: true
+    roundSlot:
+      column:   round_slot
+      type:     string
+      length:   20
+      nullable: true
+

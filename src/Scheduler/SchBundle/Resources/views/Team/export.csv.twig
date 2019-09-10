@@ -1,0 +1,5 @@
+id,Name,Colors Home,Colors Away,Division,Coach Name,Coach Phone,Coach Email,POC Email,Region
+{% for row in data %}
+{% if row.agegroup %}{% set ag = row.agegroup.name %}{% else %}{% set ag = '' %}{% endif %}
+  {{ row.id }},{{ row.name }},{{ row.colorsHome }},{{ row.colorsAway }},{{ ag }},{{ row.coach }},{{ row.coachphone }},{{ row.coachemail }},{{ row.pocemail }},{{ row.region.getName() }}
+{% endfor %}

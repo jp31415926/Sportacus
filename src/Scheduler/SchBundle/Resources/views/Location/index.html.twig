@@ -1,0 +1,35 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+  <table class="records_list table table-hover table-condensed">
+    <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Name</th>
+      <th>Long Name</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+      <tr>
+        <td><a href="{{ path('location_show', { 'id': entity.id }) }}"><img src="{{ asset('assets/img/information-white.png') }}"></a>
+          <a href="{{ path('location_edit', { 'id': entity.id }) }}"><img src="{{ asset('assets/img/report--pencil.png') }}"></a></td>
+        <td>{{ entity.name }}</td>
+        <td>{{ entity.longname }}</td>
+        <td>{{ entity.latitude }}</td>
+        <td>{{ entity.longitude }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ path('location_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create Location</a></p>
+  {# <p><a href="{{ path('avro_csv_import_upload', {'alias': 'location'}) }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-up"></i>CSV Import</a></p> #}
+  <p><a href="{{ path('location_export_csv') }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-down"></i> CSV Export</a></p>
+
+{% endblock %}

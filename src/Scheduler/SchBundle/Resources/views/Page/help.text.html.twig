@@ -1,0 +1,118 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}Help::Texting{% endblock %}
+
+{% block body %}
+  <p><a href="../help">Help</a> -> Texting</p>
+  <header>
+    <h1>Texting Help</h1>
+  </header>
+  <article>
+
+    <p>Sportac.us has a text interface, enabling you to use text messages to report scores, update game status's, get
+      game information and more. To use it, text any of the following commands to <code>(205) 235-5288</code> from the
+      mobile number setup in your user settings. Sportac.us uses your caller ID number to authenticate you.
+    </p>
+
+    <p>Sportac.us understands many commands which are listed below. Commands are shown in upper case in this help for
+      clarity, but commands are case-insensitive. You only have to specify enough letters of a command to make it unique
+      from all other valid commands. For example, "SC" is enough letters for the system to know it is a SCORE command.
+    </p>
+
+    <h3>SCORE</h3>
+    <blockquote>
+      <code>SCORE &lt;game id&gt; &lt;home score&gt; &lt;away score&gt; [&lt;ref notes&gt;]</code>
+    </blockquote>
+    <p>
+      <code>&lt;game id&gt;</code> is the game's id (either the auto-assigned number or the manually entered id)</br>
+      <code>&lt;home score&gt;</code> is the home team's score (integer)</br>
+      <code>&lt;away score&gt;</code> is the away team's score (integer)</br>
+      <code>&lt;ref notes&gt;</code> is optional. Any words after the away score are considered ref notes. If provided
+      they will be appended to the official's notes.
+    </p>
+
+    <p><b>Description:</b> The SCORE command lets you update the score of a game. Note that you can only update games
+      that you are assigned to. If the status is Normal then it is changed to Complete.</p>
+
+    </p>
+    <p><b>Example:</b> <code>sc 1234 3 4</code> - sets the score for game 1234 to 3-4.</p>
+
+    <h3>STATUS</h3>
+    <blockquote>
+      <code>STATUS &lt;game id&gt; &lt;new status&gt;</code>
+    </blockquote>
+    <p>
+      <code>&lt;game id&gt;</code> is the game's id (either the auto-assigned number or the manually entered id)</br>
+      <code>&lt;new status&gt;</code> is a status string. One of Normal, Complete, Cancelled, Suspended, Rained Out,
+      Forfeit, or Postponed.
+    </p>
+
+    <p><b>Description:</b> The STATUS command lets you update the status of a game that you have permission to change.
+      Only the first few letters of a status are required. For example, "n" is enough letters for the system to
+      recognize that the status is Normal.</p>
+
+    <p><b>Example:</b> <code>st 1234 can</code> - sets the status for game 1234 to Cancelled.</p>
+
+    <h3>SEND</h3>
+    <blockquote>
+      <p><code>SEND &lt;text type&gt;</code></p>
+    </blockquote>
+    <p>
+      <code>&lt;text type&gt;</code> is the type of text messages to start sending, one of CHANGE, REMINDER, ASSIGNMENT
+      or ALL.
+    </p>
+
+    <p><b>Description:</b> The SEND command tells the system to enable sending various types of text messages. CHANGE
+      means game change text messages. REMINDER means reminder text messages. ASSIGNMENT means assignment text messages.
+      ALL means all text messages. Only the first few letters of text type is required to uniquely identify the type.
+    </p>
+
+    <p><b>Example:</b> <code>send cha</code> - enables sending change text messages.</p>
+
+    <h3>STOP or QUIT</h3>
+    <blockquote>
+      <p><code>STOP &lt;text type&gt;</code></p>
+
+      <p><code>QUIT &lt;text type&gt;</code></p>
+    </blockquote>
+    <p>
+      <code>&lt;text type&gt;</code> is the type of text messages to stop sending, one of CHANGE, REMINDER, ASSIGNMENT
+      or ALL.
+    </p>
+
+    <p><b>Description:</b> The STOP or QUIT command tells the system to disable sending various types of text messages.
+      CHANGE means game change text messages. REMINDER means reminder text messages. ASSIGNMENT means assignment text
+      messages. ALL means all text messages. Only the first few letters of text type is required to uniquely identify
+      the type. </p>
+
+    <p><b>Example:</b> <code>stop all</code> - disables sending all text messages.</p>
+
+    <h3>ACCEPT</h3>
+    <blockquote>
+      <p><code>ACCEPT [&lt;game id&gt;]</code></p>
+    </blockquote>
+    <p>
+      <code>&lt;game id&gt;</code> is the game's id (either the auto-assigned number or the manually entered id). This
+      parameter is optional if there is only one game pending.
+    </p>
+
+    <p><b>Description:</b> The ACCEPT command tells the system that you accept a game you have been assigned to and is
+      pending. If there is only one game pending, the game id is optional.</p>
+
+    <p><b>Example:</b> <code>ac 1234</code> - accepts a pending assignment to game 1234.</p>
+
+    <h3>DECLINE</h3>
+    <blockquote>
+      <p><code>DECLINE &lt;game id&gt;</code></p>
+    </blockquote>
+    <p>
+      <code>&lt;game id&gt;</code> is the game's id (either the auto-assigned number or the manually entered id).
+    </p>
+
+    <p><b>Description:</b> The DECLINE command tells the system that you decline a game you have been assigned to. You
+      can decline a game that is pending or has already been accepted.</p>
+
+    <p><b>Example:</b> <code>de 1234</code> - declines assignment to game 1234.</p>
+
+  </article>
+{% endblock %}

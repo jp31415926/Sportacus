@@ -1,0 +1,24 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  {{ form_start(edit_form, {'action': path('location_update', { 'id': entity.id }), 'attr': {'class': 'contact'} }) }}
+    {{ form_widget(edit_form) }}
+    <p>
+      <button type="submit" class="btn btn-primary btn-large">Update</button>
+    </p>
+  {{ form_end(edit_form) }}
+
+  <p><a href="{{ path('location_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone Location</a></p>
+  <p><a href="{{ path('location') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the list</a></p>
+
+  {{ form_start(delete_form, {'action': path('location_delete', { 'id': entity.id })}) }}
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn btn-danger"
+            onclick="return confirm('Are you sure you want to delete this Location?');">Delete
+    </button>
+  {{ form_end(delete_form) }}
+
+{% endblock %}

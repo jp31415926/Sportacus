@@ -1,0 +1,85 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('assets/js/timepicker.js') }}"></script>
+  <script>
+
+    $(function () {
+      $(".datepicker").datepicker({
+        showOn: "button",
+        buttonImage: "{{ asset('assets/images/calendar.gif') }}",
+        buttonImageOnly: true,
+        dateFormat: "yy-mm-dd",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+      });
+
+      /*  $(".timepicker").timepicker({
+       showOn: "focus",
+       });
+       */
+      $("#swap").click(function () {
+        var home = $("#scheduler_schbundle_gametype_team1").val();
+        var away = $("#scheduler_schbundle_gametype_team2").val();
+        $("#scheduler_schbundle_gametype_team1").val(away);
+        $("#scheduler_schbundle_gametype_team2").val(home);
+        return false;
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+{% set projectGame = entity %}
+<h1>{{ title ~ ' #' ~ projectGame | project_game_number}} </h1>
+<p><table>
+<tr><td><b>Created:</b></td><td>{{ entity.created|date('r') }}</td></tr>
+<tr><td><b>Last updated:</b></td><td>{{ entity.updated|date('r') }}
+{% if entity.updatedby %}by {{ entity.updatedby.firstname }} {{ entity.updatedby.lastname }}{% endif %}
+</td></tr>
+</table></p>
+{{ form_start(edit_form, {'action': path('game_update', { 'id': entity.id }), 'attr': {'class': 'contact'} }) }}
+    {# { form_widget(edit_form) } #}
+    <div>
+    {{ form_errors(edit_form) }}
+    </div>
+    <div>
+    {{ form_label (edit_form.date) }}
+    {{ form_widget(edit_form.date, { 'attr': {'class': 'datepicker'} }) }}
+    </div>
+    
+    <div>
+    {{ form_label (edit_form.time) }}
+    {{ form_widget(edit_form.time, { 'attr': {'class': 'timepicker'} }) }}
+    </div>
+
+    {{ form_row(edit_form.published) }}
+    {{ form_row(edit_form.status) }}
+    {{ form_row(edit_form.agegroup) }}
+    <div>
+    {{ form_label (edit_form.team1) }}
+    {{ form_widget(edit_form.team1) }}
+    <a href="" id="swap">Swap Home<->Away</a>
+    </div>
+    {{ form_row(edit_form.team2) }}
+    
+    {{ form_rest(edit_form) }}
+    <p>
+        <button type="submit" class="btn btn-primary btn-large"{% if (entity.published == 1) and (entity.status != 0) %} onclick="return confirm('WARNING! This game is published and active. Any changes you make to this game will cause a change alert to be sent out. Are you sure?');"{% endif %}>Update</button>
+    </p>
+{{ form_end(edit_form) }}
+
+<p><a href="{{ path('game_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone Game</a></p>
+<p><a href="{{ path('game') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> Back to the schedule</a></p>
+
+{% if is_granted("ROLE_AREA_SCHEDULER") %}
+{{ form_start(delete_form, {'action': path('game_delete', { 'id': entity.id })}) }}
+	{{ form_widget(delete_form) }}
+	<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Game?{% if (entity.published == 1) and (entity.status != 0) %} This game is published and active. This action will cause a change alert to be sent out. Are you sure?{% endif %}');">Delete</button>
+{{ form_end(delete_form) }}
+{% endif %}
+{% endblock %}

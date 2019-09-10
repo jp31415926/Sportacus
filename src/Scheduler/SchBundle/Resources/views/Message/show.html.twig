@@ -1,0 +1,69 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}Show Message{% endblock %}
+
+{% block body %}
+
+<table class="record_properties table table-condensed">
+  <tbody>
+  <tr>
+    <th>Id</th>
+    <td>{{ entity.id }}</td>
+  </tr>
+  <tr>
+    <th>Delivery_date</th>
+    <td>{{ entity.deliverydate|date('Y-m-d H:i:s') }}</td>
+  </tr>
+  <tr>
+    <th>Date</th>
+    <td>{{ entity.date|date('Y-m-d H:i:s') }}</td>
+  </tr>
+  <tr>
+    <th>Sent_to</th>
+    <td>
+      {% for rcpt in entity.sentto %}
+        {{ rcpt }}<br/>
+      {% endfor %}
+    </td>
+  </tr>
+  <tr>
+    <th>Sent_from</th>
+    <td>{{ entity.sentfrom }}</td>
+  </tr>
+  <tr>
+    <th>Subject</th>
+    <td>{{ entity.subject }}</td>
+  </tr>
+  <tr>
+    <th>Message</th>
+    <td>{{ entity.message }}</td>
+  </tr>
+  <tr>
+    <th>Media_type</th>
+    <td>{{ entity.mediatype }}</td>
+  </tr>
+  <tr>
+    <th>Type</th>
+    <td>{{ entity.type }}</td>
+  </tr>
+  <tr>
+    <th>Data</th>
+    <td>{{ entity.data }}</td>
+  </tr>
+  </tbody>
+</table>
+
+  {% if is_granted("ROLE_ADMIN") %}
+    <p><a href="{{ path('message_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a></p>
+    <p><a href="{{ path('message_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> New</a></p>
+    {#<p><a href="{{ path('message_clone', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-retweet"></i> Clone</a>#}
+    {{ form_start(delete_form, {'action': path('message_delete', { 'id': entity.id })}) }}
+      {{ form_widget(delete_form) }}
+      <button type="submit" class="btn btn-danger" 
+              onclick="return confirm('Are you sure you want to delete this Message?');">Delete
+      </button>
+    {{ form_end(delete_form) }}
+    </p>
+  {% endif %}
+  <p><a href="{{ path('message') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+
+{% endblock %}

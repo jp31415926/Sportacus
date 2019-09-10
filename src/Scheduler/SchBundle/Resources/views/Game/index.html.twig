@@ -1,0 +1,167 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    $(function () {
+      $(".datepicker").datepicker({
+        showOn: "button",
+        buttonImage: "{{ asset('assets/images/calendar.gif') }}",
+        buttonImageOnly: true,
+        dateFormat: "yy-mm-dd",
+        showOtherMonths: true,
+        changeMonth: true,
+        changeYear: true
+      });
+			$( document ).tooltip();
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+  <style type="text/css">
+    .override-table td {
+      border: none !important;
+      /*border-width: 0;*/
+      line-height: 1em;
+    }
+
+    .dark-border-table td, th {
+      border: 1px solid;
+      /*border-color: rgb(0, 0, 0);*/
+      white-space: nowrap;
+    }
+		.ui-tooltip { white-space: pre-line; }
+  </style>
+  <h1>{{ title }}</h1>
+  <p>Current as of {{ "now"|date("Y-m-d H:i:s") }}</p>
+  <div class="noprint">
+
+    {{ form_start(form, {'attr': {'class' : 'gamesearch', 'id': 'gamesearch'}}) }}
+      {{ form_errors(form) }}
+
+      <div>
+        {{ form_label (form.start_date) }}
+        {{ form_errors(form.start_date) }}
+        {{ form_widget(form.start_date, { 'attr': {'class': 'datepicker', 'tabindex': '1'} }) }}
+
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="reset"><button type="button" class="btn btn-default">Reset to default</button></a>
+
+      </div>
+
+      <div>
+        {{ form_label (form.end_date) }}
+        {{ form_errors(form.end_date) }}
+        {{ form_widget(form.end_date, { 'attr': {'class': 'datepicker', 'tabindex': '2'} }) }}
+      </div>
+
+    {{ form_end(form) }}
+
+    <p></p>
+    <p>To print: You should be able to print the schedule directly from
+      this page. Please report any problems you have.</p>
+    {% if is_granted("ROLE_REF") %}
+      <p><strong>Referees: Click "Ref Schedule" above for the schedule with officials.</strong></p>
+    {% endif %}
+    {% if is_granted("ROLE_SCHEDULER") %}
+      <p><strong>Schedulers: If you want to edit a game's details, click the
+          ID number</strong></p>
+    {% endif %}
+  </div>
+
+  <strong>{{ games|length }} Games{% if stats.gameConflicts > 0 %},
+    {{ stats.gameConflicts }} game conflicts{% endif %}{% if stats.teamConflicts > 0 %},
+      {{ stats.teamConflicts }} team conflicts{% endif %}</strong>
+
+  <table class="records_list table table-condensed table-hover dark-border-table">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Status</th>
+      <th>Time</th>
+      <th>Location</th>
+      <th>Score</th>
+      <th>Home</th>
+      <th>Away</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set lastday='' %}
+    {% for game in games %}
+      {% set projectGameTeams = game | project_game_teams_sorted %}
+      {% set gameconflicts=game.getGameConflicts() %}
+      {% set team1conflicts=game.getTeam1Conflicts() %}
+      {% set team2conflicts=game.getTeam2Conflicts() %}
+      {% if (lastday != game.date|date('D M j')) %}
+        <tr>
+          <td colspan="7">{{ game.date|date('l, F j Y') }}</td>
+        </tr>
+      {% endif %}
+      {% set lastday=game.date|date('D M j') %}
+      {% set color=game.getStatusColor() %}
+      <tr{% if color %} class="{{ color }}"{% endif %}>
+        <td>
+          {% if gameconflicts %}
+            <img src="{{ asset('assets/img/exclamation-octagon.png') }}"
+                 title="Game conflicts:{% for c in gameconflicts %} {{ c.number }}{% endfor %}">
+          {% endif %}
+          {% if is_granted("ROLE_SCHEDULER") and (app.user.currentproject == game.project) %}
+            <a href="{{ path('game_edit', { 'id': game.id }) }}">{{ game | project_game_number }}</a>
+          {%  else %}
+            {{ game | project_game_number }}
+          {% endif %}
+        </td>
+        <td>{{ game.getStatusString() }}
+        </td>
+        <td>{{ game.time|date('h:i A') }}
+          {% if game.length %}
+            ({{ game.length }} min)
+          {% elseif game.timeslotlength %}
+            ({{ game.timeslotlength }} min slot)
+          {% endif %}
+        </td>
+
+        <td{% if game.location and game.location.longname %} title="{{ game.location.longname }}"{% endif %}>
+          {% if game.location %}<a href="{{ path('location_show', { 'id': game.location.id }) }}">{{ game.location }}</a>{% endif %}
+          {% if is_granted("ROLE_REF") %}
+        <td><a href="{{ path('game_scorecard', { 'id': game.id }) }}"{% if game.refNotes %} title="{{ game.refNotes|striptags }}"{% endif %}>{{ projectGameTeams | project_game_teams_score }}
+          {% if game.refNotes %}{% if game.alertAdmin %}<strong>[!N!]</strong>{% else %}[N]{% endif %}{% endif %}</a></td>
+        {% else %}
+          <td>{{ projectGameTeams | project_game_teams_score }}</td>
+        {% endif %}
+
+        {% set colorsH,colorsA='Unknown','Unknown' %}
+				{% if game.team1 and game.team1.colorsHome %}{% set colorsH=game.team1.colorsHome %}{% endif %}
+				{% if game.team2 %}
+					{% if game.team2.colorsAway %}{% set colorsA=game.team2.colorsAway %}
+					{% elseif game.team2.colorsHome %}{% set colorsA=game.team2.colorsHome %}{% endif %}
+				{% endif %}
+        <td>
+          {% if team1conflicts %}
+            <img src="{{ asset('assets/img/exclamation-octagon.png') }}"
+                 title="Team conflicts:{% for c in team1conflicts %} {{ c.number }}{% endfor %}">
+          {% endif %}
+          <img src="{{ asset('colorsquare.php?color1=' ~ colorsH) }}" width="16" height="16" title="{{ colorsH }}"> <a href="{{ path('team_show', { 'id': game.team1 ? game.team1.id : 0 }) }}">{{ game.team1 }}</a></td>
+        <td>
+          {% if team2conflicts %}
+            <img src="{{ asset('assets/img/exclamation-octagon.png') }}"
+                 title="Team conflicts:{% for c in team2conflicts %} {{ c.number }}{% endfor %}">
+          {% endif %}
+          <img src="{{ asset('colorsquare.php?color1=' ~ colorsA) }}" width="16" height="16" title="{{ colorsA }}"> <a href="{{ path('team_show', { 'id': game.team2 ? game.team2.id : 0 }) }}">{{ game.team2 }}</a></td>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="noprint">
+    {% if is_granted("ROLE_SCHEDULER") %}
+      <p><a href="{{ path('game_new') }}"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Create Game</button></a></p>
+      <p><a href="{{ path('game_import') }}"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span> CSV Import</button></a></p>
+    {% endif %}
+    <p><a href="{{ path('game_export_csv') }}"><button type="button" class="btn btn-default"><spam class="glyphicon glyphicon-arrow-down"></spam> CSV Export</button></a></p>
+  </div>
+{% endblock %}

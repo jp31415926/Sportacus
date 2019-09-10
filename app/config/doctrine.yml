@@ -1,0 +1,42 @@
+# Doctrine Configuration
+doctrine:
+
+  dbal:
+    default_connection: default
+    connections:
+      default:
+        driver:   '%database_driver%'
+        host:     '%database_host%'
+        port:     '%database_port%'
+        dbname:   '%database_name%'
+        user:     '%database_user%'
+        password: '%database_password%'
+        charset:  UTF8
+      sportacus:
+        driver:   '%database_driver%'
+        host:     '%database_host%'
+        port:     '%database_port%'
+        dbname:   '%database_name_sportacus%'
+        user:     '%database_user%'
+        password: '%database_password%'
+        charset:  UTF8
+      sportacusx:
+        driver:   '%database_driver%'
+        host:     '%database_host%'
+        port:     '%database_port%'
+        dbname:   '%database_name_sportacusx%'
+        user:     '%database_user%'
+        password: '%database_password%'
+        charset:  UTF8
+      eayso:
+        driver:   '%database_driver%'
+        host:     '%database_host%'
+        port:     '%database_port%'
+        dbname:   '%database_name_eayso%'
+        user:     '%database_user%'
+        password: '%database_password%'
+        charset:  UTF8
+
+  orm:
+    auto_generate_proxy_classes: '%kernel.debug%'
+    auto_mapping: true

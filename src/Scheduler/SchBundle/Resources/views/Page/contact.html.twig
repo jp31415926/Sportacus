@@ -1,0 +1,29 @@
+{# Scheduler/SchBundle/Resources/views/Page/contact.html.twig #}
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+  <header>
+    <h1>Contact Us</h1>
+  </header>
+
+  <p>Want to contact sportac.us?</p>
+
+  {{ form_start(form, {'attr': {'class': 'contact'} }) }}
+    {#    {{ form_widget(form) }}      quick and dirty way... #}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.subject) }}
+    {{ form_row(form.body) }}
+    <div class="g-recaptcha" data-sitekey="6LdKjSgTAAAAAPojCsRmKjcBPwtUloYSbVNfFi38"></div>
+    {{ form_rest(form) }}
+    <input type="submit" value="Submit"/>
+  </form>
+
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+
+{% endblock %}
+

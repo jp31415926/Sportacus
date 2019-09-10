@@ -1,0 +1,101 @@
+form.gamesearch {
+  font-size: 14px;
+}
+
+form.gamesearch div {
+  clear: left;
+}
+
+form.gamesearch label {
+  float: left;
+  margin-right: 10px;
+  text-align: right;
+  width: 100px;
+  font-weight: bold;
+  vertical-align: top;
+  padding-top: 5px;
+}
+
+form.gamesearch input[type="date"] {
+  width: 150px;
+  line-height: 20px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+form.gamesearch input[type="time"] {
+  width: 50px;
+  line-height: 20px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+form.gamesearch button {
+  margin-left: 20px;
+  line-height: 20px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.contact-notice {
+  text-align: center;
+  padding: 10px;
+  background: #DFF2BF;
+  border: 1px solid;
+  color: #4F8A10;
+  margin-bottom: 10px;
+}
+
+.contact-error {
+  text-align: center;
+  padding: 10px;
+  background: red;
+  border: 1px solid;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+form.contact {
+  font-size: 14px;
+}
+
+form.contact div {
+  clear: left;
+  margin-bottom: 10px;
+}
+
+form.contact label {
+  float: left;
+  margin-right: 10px;
+  text-align: right;
+  width: 100px;
+  font-weight: bold;
+  vertical-align: top;
+  padding-top: 5px;
+}
+
+form.contact textarea {
+  width: 500px;
+  height: 150px;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+form.contact input[type="submit"] {
+  margin-left: 110px;
+  line-height: 20px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+form.contact button {
+  margin-left: 110px;
+  line-height: 20px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+form.contact ul li {
+  color: #ff0000;
+  margin-bottom: 5px;
+}

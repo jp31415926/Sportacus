@@ -1,0 +1,6 @@
+{{ form_start(form, {'action': path('fos_user_resetting_reset', { 'token': token })}) }}
+  {{ form_widget(form) }}
+    <div>
+        <input class="btn btn-large btn-primary" type="submit" value="{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,47 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }} #{{  game.number }}</h1>
+
+  <table>
+    <tr>
+      <td>Home:</td>
+      <td><strong>{{ game.team1 }}</strong></td>
+    </tr>
+    <tr>
+      <td>Away:</td>
+      <td><strong>{{ game.team2 }}</strong></td>
+    </tr>
+    <tr>
+      <td>Date:</td>
+      <td><strong>{{ game.date|date('D M j') }} {{ game.time|date('g:i A') }}</strong></td>
+    </tr>
+    <tr>
+      <td>Location:</td>
+      <td><strong>{{ game.location }}</strong></td>
+    </tr>
+  </table>
+  <br/>
+
+  {{ form_start(edit_form, {'action': path('game_assign', { 'id': game.id }), 'attr': {'class': 'contact'} }) }}
+    {{ form_widget(edit_form) }}
+    <p>
+      <button type="submit" class="btn btn-primary btn-large">Update</button>
+    </p>
+  {{ form_end(edit_form) }}
+
+  <p><a href="{{ path('official_schedule') }}" class="btn btn-default"><i class="glyphicon glyphicon-backward"></i> List</a></p>
+
+  <h3>Instructions</h3>
+  <p>
+    <strong>Assignment:</strong> Sign up for a game by picking your name from the pull-down next to the
+    position you want. If someone else is already assigned to that game
+    you will not be able to change it (unless it is you). The change note is to tell the Referee Admin
+    or Assigner why you changed the assignment (if you feel an explanation is necessary).</p>
+
+  <p><strong>Removal:</strong> Remove yourself from a game by using the pull-down and selecting
+    "Unassigned".
+  </p>
+
+{% endblock %}

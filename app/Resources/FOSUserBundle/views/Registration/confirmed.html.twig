@@ -1,0 +1,11 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+    <p>Congrats {{ user.username }}, your account is now activated.</p>
+    <p>If you requested referee permissions, please be patient until your certification is verified.</p>
+    <p>Thanks!</p>
+
+    {% if targetUrl %}
+    <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>
+    {% endif %}
+{% endblock fos_user_content %}

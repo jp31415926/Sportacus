@@ -1,0 +1,14 @@
+# ProjectLevel/config/routes.yml
+# /project-level/
+
+project_level_show:
+  path:     /{levelIdId}/show
+  methods:  [GET]
+  defaults:
+    _controller: cerad_project_level_show_controller
+
+project_level_import:
+  path:     /import
+  methods:  [GET,POST]
+  defaults:
+    _controller: cerad_project_level_import_action

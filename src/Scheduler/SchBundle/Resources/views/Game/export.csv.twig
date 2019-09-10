@@ -1,0 +1,7 @@
+{% autoescape false %}
+id,Number,Status,Date,Time,Home,Away,Division,Length,TSLength,Location,Region,Ref1,Ref2,Ref3,Ref4,Ref5,email1,email2,email3,email4,email5
+{% for r in data %}
+  {# {% if r.number %}{{ r.number }}{% else %}{{ r.id }}{% endif %},{{ #}
+  {{ r.id }},{{ r.number }},{{ r.getStatusString()|csvQuote }},{{ r.date|date('Y-m-d') }},{{ r.time|date('G:i') }},{{ r.team1.name|csvQuote }},{{ r.team2.name|csvQuote }},{{ r.agegroup|csvQuote }},{{ r.length }},{{ r.timeslotlength }},{{ r.location|csvQuote }},{% if r.region %}{{ r.region.name|csvQuote }}{% endif %},{{ r.ref1|csvQuote }},{{ r.ref2|csvQuote }},{{ r.ref3|csvQuote }},{{ r.ref4|csvQuote }},{{ r.ref5|csvQuote }}
+{% endfor %}
+{% endautoescape %}

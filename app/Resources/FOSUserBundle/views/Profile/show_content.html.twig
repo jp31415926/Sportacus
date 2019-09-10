@@ -1,0 +1,49 @@
+<div class="fos_user_user_show">
+  <h2>User Settings</h2>
+  <table class="table table-condensed">
+    <tr><th>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}</th><td>{{ user.username }}</td></tr>
+    <tr><th>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}</th><td>{{ user.email }}</td></tr>
+    <tr><th>First name</th><td>{{ user.firstname }}</td></tr>
+    <tr><th>Last name</th><td>{{ user.lastname }}</td></tr>
+    <tr><th>Region</th><td>{{ user.region }}</td></tr>
+    <tr><th>Phone (home)</th><td>{{ user.phoneHome|phone }}</td></tr>
+    <tr><th>Phone (mobile)</th><td>{{ user.phoneMobile|phone }}</td></tr>
+    {% if user.mobileProvider %}<tr><th>Mobile provider</th><td>{{ user.mobileProvider }} {% if user.mobileProviderVerified %}(verified){% else %}(unverified){% endif %}</td></tr>{% endif %}
+    <tr><th>AYSO ID</th><td>{{ user.aysoId }}</td></tr>
+    <tr><th>Calendar URL</th><td><a href="webcal://sportac.us/ical/user/{{ user.id }}">webcal://sportac.us/ical/user/{{ user.id }}</a>
+(Howto: 
+<a href="https://support.google.com/calendar/answer/37100" target="_blank">Google Calendar</a>, 
+<a href="http://help.yahoo.com/kb/index?page=content&id=SLN3849" target="_blank">Yahoo Calendar</a>, 
+<a href="http://office.microsoft.com/en-us/outlook-help/view-and-subscribe-to-internet-calendars-HA010167325.aspx#BM2" target="_blank">Microsoft Outlook</a>)</td>
+</tr>
+	</table>
+
+  <h2>Notification Settings</h2>
+  <table class="table">
+    <tr><th>Game change notify</th>
+{% set enabled='<img src="' ~ asset('assets/img/tick-circle.png') ~ '" alt="enabled" title="enabled">' %}
+{% set disabled='<img src="' ~ asset('assets/img/cross-circle.png') ~ '" alt="disabled" title="disabled">' %}
+      <td>Email {{ user.optionchangeemail ? enabled|raw : disabled|raw }}</td>
+      <td>Text {{ user.optionchangetext ? enabled|raw : disabled|raw }}</td>
+    </tr>
+    <tr><th>Game reminders</th>
+      <td>Email {{ user.optionreminderemail ? enabled|raw : disabled|raw }}</td>
+      <td>Text {{ user.optionremindertext ? enabled|raw : disabled|raw }}</td>
+    </tr>
+    <tr><th>Your game assignment notifications</th>
+      <td>Email {{ user.optionassignmentemail ? enabled|raw : disabled|raw }}</td>
+      <td>Text {{ user.optionassignmenttext ? enabled|raw : disabled|raw }}</td>
+    </tr>
+{% if user.roleassigner %}
+    <tr><th>All game assignment notifications</th>
+      <td>Email {{ user.optionassigneremail ? enabled|raw : disabled|raw }}</td>
+      <td>Text {{ user.optionassignertext ? enabled|raw : disabled|raw }}</td>
+    </tr>
+{% endif %}
+	</table>
+
+  <p><a href='{{ path('fos_user_profile_edit') }}' class="btn btn-primary">Edit Profile</a></p>
+  <p><a href='{{ path('fos_user_change_password') }}' class="btn btn-primary">Change Password</a></p>
+
+</div>
+

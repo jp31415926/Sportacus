@@ -1,0 +1,49 @@
+{% extends 'SchedulerBundle::layout.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  <h1>{{ title }}</h1>
+
+  <table class="records_list table table-hover table-condensed">
+    <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Name</th>
+      <th>Coach</th>
+      <th>Coach Phone</th>
+      <th>Coach Email</th>
+      <th>Alt POC Email</th>
+      <th>Home Colors</th>
+      <th>Away Colors</th>
+      <th>Agegroup</th>
+      <th>Region</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for team in entities %}
+      <tr>
+        {% set colorsH,colorsA='Unknown','Unknown' %}
+				{% if team.colorsHome %}{% set colorsH=team.colorsHome %}{% endif %}
+				{% if team.colorsAway %}{% set colorsA=team.colorsAway %}{% endif %}
+        <td><a href="{{ path('team_show', { 'id': team.id }) }}"><img src="{{ asset('assets/img/information-white.png') }}" title="Show Team"></a>
+          <a href="{{ path('team_edit', { 'id': team.id }) }}"><img src="{{ asset('assets/img/report--pencil.png') }}" title="Edit Team"></a></td>
+        <td>{{ team.name }}</td>
+        <td>{{ team.coach }}</td>
+        <td>{{ team.coachphone|phone }}</td>
+        <td>{{ team.coachemail }}</td>
+        <td>{{ team.pocemail }}</td>
+        <td><img src="{{ asset('colorsquare.php?color1=' ~ colorsH) }}" width="16" height="16" title="{{ colorsH }}" /> {{ colorsH }}</td>
+        <td>{% if team.colorsAway %}<img src="{{ asset('colorsquare.php?color1=' ~ colorsA) }}" width="16" height="16" title="{{ colorsA }}" /> {{ colorsA }}{% else %}&nbsp;{% endif %}</td>
+        <td>{{ team.agegroup }}</td>
+        <td>{% if team.region %}{{ team.region.name }}{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{{ path('team_new') }}" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Create Team</a></p>
+  <p><a href="{{ path('team_import') }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-up"></i>CSV Import</a></p>
+  <p><a href="{{ path('team_export_csv') }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-down"></i> CSV Export</a></p>
+
+{% endblock %}
