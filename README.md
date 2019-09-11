@@ -54,7 +54,7 @@ mysql> grant all on db.* to 'user'@'localhost' identified by 'user-pass';
 ```
 or, to create a clean database.
 ```
-# app/console doctrine:schema:create
+# bin/console doctrine:schema:create
 ```
 
 11. Copy parameters.sh.dist to parameters.sh and app/config/parameters.yml.dist to app/config/parameters.yml. Edit as needed.
@@ -62,11 +62,11 @@ You probably need to change "httpProtocol: https" to "httpProtocol: http" in app
 
 12. Point your browser at web/app_dev.php. For production environment, configure your server to map the root of the webpage to web/app.php.
 
-12. Register an admin user on the webpage and then promote that user to admin:
+13. Register an admin user on the webpage and then promote that user to admin:
 ```
 # app/console fos:user:promote admin ROLE_ADMIN
 ```
 
-You should have a working copy by now. Point your browser to http://localhost/<path-to-code>/web/app_dev.php . Look at var/log/[dev|prod].log to get hints when you have issues.
+You should have a working copy by now. Look at var/log/[dev|prod].log to get hints when you have issues.
 
 To push changes to the repo, fork the project, make your changes, then create a pull request.
