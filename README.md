@@ -64,7 +64,7 @@ You probably need to change "httpProtocol: https" to "httpProtocol: http" in app
 
 13. Register an admin user on the webpage and then promote that user to admin:
 ```
-# app/console fos:user:promote admin ROLE_ADMIN
+# bin/console fos:user:promote admin ROLE_ADMIN
 ```
 
 You should have a working copy by now. Look at var/log/[dev|prod].log to get hints when you have issues.
