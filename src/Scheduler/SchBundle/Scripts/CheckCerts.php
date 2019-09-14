@@ -843,11 +843,14 @@ GET https://national.ayso.org/Volunteers/SelectViewCertificationInitialData?AYSO
  */
 
 if ($argc < 2) {
-  echo "Usage: {$argv[0]} <test:0,1> [<MY2015>]\n";
+  echo "Usage: {$argv[0]} <0=quiet,1=verbose,2=test> [<MY2015>]\n";
   exit;
 }
 
-$test = $argv[1];
+$mode = $argv[1];
+$test = ($mode == 2);
+$verbose = ($mode > 0);
+
 if ($argc > 2)
   $my = $argv[2];
 else
@@ -895,7 +898,7 @@ function DoQuery($mysqli, $query)
       $result->free();
     }
   } else {
-    printf("query '%s' failed: %s\n", $query, $mysqli->error);
+    printf("ERROR: query '%s' failed: %s\n", $query, $mysqli->error);
     return false;
   }
 
@@ -957,7 +960,7 @@ function buildEmailListFromArray($arr)
 function sendEmailMessage($emailTo, $subject, $msg, $emailCc = array())
 {
   if (!array_key_exists('john.price@ayso894.net', $emailCc)) {
-    $emailCc['john.price@ayso894.net'] = 'John Price';
+    $emailCc['john.price@ayso894.net'] = 'John Price'; // FIXME
   }
   $to = buildEmailListFromArray($emailTo);
   $cc = buildEmailListFromArray($emailCc);
@@ -975,10 +978,10 @@ function sendEmailMessage($emailTo, $subject, $msg, $emailCc = array())
 
 $mysqli = new mysqli($mysql_server, $mysql_user, $mysql_password, $myqsl_database);
 if ($mysqli->connect_error) {
-  printf("Connect failed: %d %s\n", $mysqli->connect_errno, $mysqli->connect_error);
+  printf("ERROR: Connect failed: %d %s\n", $mysqli->connect_errno, $mysqli->connect_error);
   exit();
 }
-echo 'Connect success: ' . $mysqli->host_info . "\n";
+if ($verbose) echo 'Connect success: ' . $mysqli->host_info . "\n";
 
 $users = DoQuery($mysqli, 'SELECT * FROM fos_user');
 $regionsCache = [];
@@ -1002,22 +1005,22 @@ foreach ($users as $user_id => $user) {
   //print_r($a);
   $aysoid = $user['ayso_id'];
   $roles = unserialize($user['roles']);
-  echo "\n" . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
+  if ($verbose) echo "\n" . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
 
   $ayso_info = GetVolCerts($aysoid);
 
   //print_r($ayso_info);
 
   if (empty($ayso_info)) {
-    echo 'FAILED to get info for AYSO ID ' . $aysoid . "\n";
+    if ($verbose) echo 'FAILED to get info for AYSO ID ' . $aysoid . "\n";
     continue;
   }
   if ($ayso_info['ReturnStatus'] != 0) {
-    echo 'FAILED ReturnStatus != 0 for AYSO ID ' . $aysoid . ': ReturnMessage=' . $ayso_info['ReturnMessage'] . "\n";
+    if ($verbose) echo 'FAILED ReturnStatus != 0 for AYSO ID ' . $aysoid . ': ReturnMessage=' . $ayso_info['ReturnMessage'] . "\n";
     continue;
   }
   if (!array_key_exists('VolunteerCertificationDetails', $ayso_info)) {
-    echo 'FAILED VolunteerCertificationDetails not found for AYSO ID ' . $aysoid . "\n";
+    if ($verbose) echo 'FAILED VolunteerCertificationDetails not found for AYSO ID ' . $aysoid . "\n";
     continue;
   }
   $details = $ayso_info['VolunteerCertificationDetails'];
@@ -1042,14 +1045,14 @@ foreach ($users as $user_id => $user) {
       )
     ) {
       $safeHaven = 1;
-      echo "Safe Haven (Coach) found\n";
+      if ($verbose) echo "Safe Haven (Coach) found\n";
     }
   }
   foreach ($details['VolunteerCertificationsReferee'] as $cert_info) {
     //echo '  searching for cert ' . $cert_info['CertificationDesc'] . "\n";
     if (array_key_exists($cert_info['CertificationDesc'], $Certs)) {
       $c = $Certs[$cert_info['CertificationDesc']];
-      echo $cert_info['CertificationDesc'] . " found\n";
+      if ($verbose) echo $cert_info['CertificationDesc'] . " found\n";
       if ($cert < $c) {
         $cert = $c;
       }
@@ -1060,7 +1063,7 @@ foreach ($users as $user_id => $user) {
       'Z-Online Safe Haven Referee' => 3,
     ])) {
       $safeHaven = 1;
-      echo "Safe Haven (Referee) found\n";
+      if ($verbose) echo "Safe Haven (Referee) found\n";
     }
   }
 
@@ -1072,19 +1075,19 @@ foreach ($users as $user_id => $user) {
       'AYSOs Safe Haven' => 3
     ])) {
       $safeHaven = 1;
-      echo "Safe Haven found\n";
+      if ($verbose) echo "Safe Haven found\n";
     }
     if (($concussion == 0) && array_key_exists($cert_info['CertificationDesc'], [
       'Z-Online CDC Concussion Awareness Training' => 1,
       'CDC Online Concussion Awareness Training' => 2
     ])) {
       $concussion = 1;
-      echo "Concussion found\n";
+      if ($verbose) echo "Concussion found\n";
     }
   }
 
-  echo 'Badge for ' . $fullname . ' determined to be ' . $Badges[$cert] . "\n";
-  echo "Roles: {$user['roles']}\n";
+  if ($verbose) echo 'Badge for ' . $fullname . ' determined to be ' . $Badges[$cert] . "\n";
+  if ($verbose) echo "Roles: {$user['roles']}\n";
 
   $valid_my = 0;
   $myMY = substr($user['ayso_my'], 0, 6);
@@ -1093,20 +1096,20 @@ foreach ($users as $user_id => $user) {
     $aysoMY = $myMY;
   }
   if (($aysoMY != $my) && ($myMY == $my)) {
-    echo "National says $aysoMY but $my in Sportacus, so assume OK\n";
+    if ($verbose) echo "National says $aysoMY but $my in Sportacus, so assume OK\n";
     $aysoMY = $myMY;
   }
   if (empty($my) || ($aysoMY == $my)) {
     $valid_my = 1;
-    echo "MY valid\n";
+    if ($verbose) echo "MY valid\n";
   }
   $referee = ($cert > 0) && $safeHaven && $concussion && $valid_my;
 
   // if they are already enabled, don't disable them.
-  //if (!$referee && $user['role_referee']) {
-  //  echo "* NOT DISABLING REFEREE THAT IS ALREADY ENABLED\n";
-  //  $referee = TRUE;
-  //}
+  if (!$referee && $user['role_referee']) {
+    if ($verbose) echo "* NOT DISABLING REFEREE THAT IS ALREADY ENABLED\n";
+    $referee = TRUE;
+  }
 
   if (!$safeHaven) {
     $aysoMY .= " SH";
@@ -1123,7 +1126,7 @@ foreach ($users as $user_id => $user) {
   ) {
     if (($user['role_referee'] != $referee)) {
       if ($referee) {
-        echo "* Enabling disabled referee\n";
+        echo "* Enabling disabled referee: " . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
         system("echo \"$aysoid $fullname\" >> ref-enabled-list.txt");
 
         $msg = "You are now allowed to request referee assignment to games on Sportacus (you may have to logout and log back in for this change to take effect).\n\n" .
@@ -1146,26 +1149,25 @@ foreach ($users as $user_id => $user) {
             $m .= "Cc: $name <$email>\n";
           }
           $msg = $m . "\n" . $msg;
-          //$to = ['john.price@ayso894.net' => 'John Price'];
-          $to = ['jp@localhost' => 'John Price'];
+          $to = ['john.price@ayso894.net' => 'John Price'];
           $cc = [];
         }
         sendEmailMessage($to, "You now have referee permissions", $msg, $cc);
       } else {
-        echo "* DISABLING REFEREE\n";
+        echo "* DISABLING REFEREE " . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
         system("echo \"$aysoid $fullname\" >> ref-disabled-list.txt");
         //echo "* NOT disabling referee\n";
         //$referee = true;
       }
     }
     if ($user['ayso_my'] != $aysoMY) {
-      echo "* AYSO MY updated from ${user['ayso_my']} to $aysoMY\n";
+      echo "* AYSO MY updated from ${user['ayso_my']} to $aysoMY " . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
     }
     if ($user['badge'] != $Badges[$cert]) {
-      echo "* Badge updated from ${user['badge']} to ${Badges[$cert]}\n";
+      echo "* Badge updated from ${user['badge']} to ${Badges[$cert]} " . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
     }
     if ($user['is_youth'] != $is_youth) {
-      echo "* Youth flag updated from ${user['is_youth']} to $is_youth\n";
+      echo "* Youth flag updated from ${user['is_youth']} to $is_youth " . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
     }
     $rolestr = serialize($roles);
     $q = "UPDATE fos_user SET ayso_my='$aysoMY',role_referee='" . ($referee ? 1 : 0) . "',roles='{$rolestr}',badge='{$Badges[$cert]}',is_youth='$is_youth',updated=NOW() WHERE id='$user_id'";
@@ -1177,10 +1179,10 @@ foreach ($users as $user_id => $user) {
     }
   }
 
-  if (--$count == 0) {
-    break;
-  }
-  usleep(200);
+  //if (--$count == 0) {
+  //  break;
+  //}
+  usleep(1000);
 }
 
 $mysqli->close();
