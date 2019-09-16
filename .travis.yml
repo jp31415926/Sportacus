@@ -6,9 +6,6 @@ php:
 
 before_script:
   - 'php -r "echo ''PHP mem limit: ''.ini_get(''memory_limit'').PHP_EOL;"'
-  - /bin/dd if=/dev/zero of=swap.1 bs=1M count=1024
-  - /sbin/mkswap swap.1
-  - /sbin/swapon swap.1
-  - composer install -n
+  - php -d memory_limit=-1 `which composer` install -n
 
 script: phpunit -c app
