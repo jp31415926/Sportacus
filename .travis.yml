@@ -2,12 +2,9 @@ language: php
 
 php:
   - 7.2
-  - hhvm
 
-matrix:
-  fast_finish: true
-  allow_failures:
-    - php: hhvm
+services:
+  - mysql
 
 mysql:
   database: dbname
@@ -16,12 +13,18 @@ mysql:
   encoding: utf8
 
 before_install:
+  - mysql -e 'CREATE DATABASE dbname;'
+  - mysql -e 'GRANT ALL ON dbname.* TO dbuser@localhost IDENTIFIED BY dbpass;'
   #- cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   #- export COMPOSER_MEMORY_LIMIT="$HOME/.composer/vendor/bin:$PATH"
 
 before_script:
   - COMPOSER_MEMORY_LIMIT=-1 composer install -n
-  - mysql -e 'create database dbname'
+  - mkdir -p var/cache var/logs
+  - chmod a+rw var/cache var/logs
+  - bin/console doctrine:schema:create
+  - cp parameters.sh.dist parameters.sh
+  - cp src/Scheduler/SchBundle/Scripts/parameters.php.dist src/Scheduler/SchBundle/Scripts/parameters.php
 
 script:
   - phpunit -c app
