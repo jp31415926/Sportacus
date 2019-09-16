@@ -2,9 +2,25 @@ language: php
 
 php:
   - 7.2
+  - hhvm
 
-before_install: echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: hhvm
 
-before_script: composer install -n
+mysql:
+  database: dbname
+  username: dbuser
+  encoding: utf8
 
-script: phpunit -c app
+before_install:
+  - cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  #- export COMPOSER_MEMORY_LIMIT="$HOME/.composer/vendor/bin:$PATH"
+
+before_script:
+  - COMPOSER_MEMORY_LIMIT=-1 composer --profile install -n
+  - mysql -e 'create database dbname'
+
+script:
+  - phpunit -c app
