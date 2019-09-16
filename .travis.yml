@@ -6,6 +6,6 @@ php:
 
 before_script:
   - 'php -r "echo ''PHP mem limit: ''.ini_get(''memory_limit'').PHP_EOL;"'
-  - php -d memory_limit=-1 `which composer` install -n
+  - php --define memory_limit=-1 /usr/bin/composer install -n
 
 script: phpunit -c app
