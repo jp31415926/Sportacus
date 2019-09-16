@@ -2,12 +2,12 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: null
-    database_name: sportacus
-    database_name_sportacus:  sportacus
-    database_name_sportacusx: sportacusx
+    database_name: dbname
+    database_name_sportacus:  dbname
+    database_name_sportacusx: dbnamex
     database_name_eayso:      eayso
-    database_user: sportacus
-    database_password: sportacus1234
+    database_user: dbuser
+    database_password: dbpass
     mailer_transport: smtp
     mailer_host: localhost
     mailer_user: null
@@ -15,7 +15,7 @@ parameters:
     mailer_delivery_address_dev: dev@example.com
     mailer_disable_delivery_dev: false
     locale: en
-    secret: ThisTokenIsNotSoSecretChangeIt
+    recaptcha_secret: ThisTokenIsNotSoSecretChangeIt
     test_email: true
     tropo_dev_key: 123456
     tropo_prod_key: 123456
