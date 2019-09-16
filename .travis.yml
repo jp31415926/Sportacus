@@ -1,14 +1,10 @@
 language: php
 
 php:
-  - 7.0
   - 7.2
 
-before_script:
-  - cat /proc/meminfo
-  - 'php -r "echo ''PHP mem limit: ''.ini_get(''memory_limit'').PHP_EOL;"'
-  - whereis composer
-  - which composer
-  - php --define memory_limit=-1 `which composer` install -n
+before_install: echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+before_script: composer install -n
 
 script: phpunit -c app
