@@ -1,14 +1,14 @@
 language: php
 
 php:
-  - 5.3.3
-  - 7.2
+- 7.0
+- 7.2
 
 before_script: 
-  - php -r "echo 'PHP mem limit: '.ini_get('memory_limit').PHP_EOL";
-  - /bin/dd if=/dev/zero of=swap.1 bs=1M count=1024
-  - /sbin/mkswap swap.1
-  - /sbin/swapon swap.1
-  - composer install -n
+- "php -r \"echo 'PHP mem limit: '.ini_get('memory_limit').PHP_EOL\"";
+- /bin/dd if=/dev/zero of=swap.1 bs=1M count=1024
+- /sbin/mkswap swap.1
+- /sbin/swapon swap.1
+- composer install -n
 
 script: phpunit -c app
