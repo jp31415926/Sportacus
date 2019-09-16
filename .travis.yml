@@ -12,14 +12,15 @@ matrix:
 mysql:
   database: dbname
   username: dbuser
+  password: dbpass
   encoding: utf8
 
 before_install:
-  - cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  #- cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   #- export COMPOSER_MEMORY_LIMIT="$HOME/.composer/vendor/bin:$PATH"
 
 before_script:
-  - COMPOSER_MEMORY_LIMIT=-1 composer --profile install -n
+  - COMPOSER_MEMORY_LIMIT=-1 composer install -n
   - mysql -e 'create database dbname'
 
 script:
