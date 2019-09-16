@@ -14,7 +14,7 @@ mysql:
 
 before_install:
   - 'mysql -e "CREATE DATABASE dbname;"'
-  - 'mysql -e "GRANT ALL ON ''dbname''.* TO ''dbuser''@''localhost'' IDENTIFIED BY ''dbpass'';"'
+  - 'mysql -e "GRANT ALL ON dbname.* TO ''dbuser''@''localhost'' IDENTIFIED BY ''dbpass'';"'
   #- cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   #- export COMPOSER_MEMORY_LIMIT="$HOME/.composer/vendor/bin:$PATH"
 
