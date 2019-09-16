@@ -16,6 +16,7 @@ parameters:
     mailer_disable_delivery_dev: false
     locale: en
     recaptcha_secret: ThisTokenIsNotSoSecretChangeIt
+    secret: ThisTokenIsNotSoSecretChangeIt
     test_email: true
     tropo_dev_key: 123456
     tropo_prod_key: 123456
