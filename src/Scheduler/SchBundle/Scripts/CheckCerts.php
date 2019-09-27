@@ -1103,7 +1103,7 @@ foreach ($users as $user_id => $user) {
     $valid_my = 1;
     if ($verbose) echo "MY valid\n";
   }
-  $referee = ($cert > 0) && $safeHaven && $concussion && $valid_my;
+  $referee = ($user['enabled'] == '1') && ($cert > 0) && $safeHaven && $concussion && $valid_my;
 
   // if they are already enabled, don't disable them.
   if (!$referee && $user['role_referee']) {
@@ -1117,12 +1117,13 @@ foreach ($users as $user_id => $user) {
   if (!$concussion) {
     $aysoMY .= " C";
   }
+  $rolesUpdated = UpdateRoles($roles, $referee); // make sure roles array matches referee role
   if (
     ($user['role_referee'] != $referee) || // referee role changed?
     ($user['ayso_my'] != $aysoMY) || // MY changed?
     ($user['badge'] != $Badges[$cert]) || // badge changed?
     ($user['is_youth'] != $is_youth) || // youth status changed?
-    UpdateRoles($roles, $referee) // make sure roles array matches referee role
+    $rolesUpdated
   ) {
     if (($user['role_referee'] != $referee)) {
       if ($referee) {
