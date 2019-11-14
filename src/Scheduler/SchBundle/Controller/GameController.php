@@ -585,37 +585,35 @@ class GameController extends Controller {
 
   // FIXME: this needs to be a separate operation
   /**
-   * @param User $user
-   * @param $msg
+   * @param string $num
+   * @param string $msg
    */
   function sendText($num, $msg) {
     if (empty($num) || empty($msg)) {
-      return;
+      return -1;
     }
-    $mytime = microtime(true);
-    $testing = $this->container->getParameter('test_email');
-    if ($testing) {
-      $tropo_key = $this->container->getParameter('tropo_dev_key');
-    } else {
-      $tropo_key = $this->container->getParameter('tropo_prod_key');
+    if ($this->container->getParameter('test_text')) {
+      $msg = "To $num:$msg";
+      $num = $this->container->getParameter('twilio_test_to');
     }
-    $TROPO_URL = 'https://api.tropo.com/1.0/sessions?action=create&token=' . $tropo_key;
+    $twilio_from = $this->container->getParameter('twilio_from');
+    $twilio_user = $this->container->getParameter('twilio_user');
+    $twilio_pass = $this->container->getParameter('twilio_pass');
+    $URL = 'https://api.twilio.com/2010-04-01/Accounts/'.$user.'/Messages.json';
 
-    //$num = $user->getPhoneMobile();
-    $url = $TROPO_URL . "&num=" . urlencode($num) . "&msg=" . urlencode($msg);
-    //echo "msg len = ".strlen($msg)."\n";
+    $post_data['To'] = $num;
+    $post_data['From'] = $twilio_from;
+    $post_data['Body'] = $msg;
+
     $curl = curl_init();
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
     curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_USERPWD, "$twilio_user:$twilio_pass");
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    //echo "Fetching $url\n";
-    $xml = curl_exec($curl);
+    $json = json_decode(curl_exec($curl), true);
     curl_close($curl);
-    // supposed to wait 1 second between text messages.
-    // TODO: make text message sending (and email) a separate process
-    $mytime = microtime(true) - $mytime;
-    if ($mytime < 1.0) {
-      usleep((1.0 - $mytime) * 1000000);
-    }
+    return empty($json['error_code']) ? FALSE : ['error_code' => $json['errorcode'], 'error_msg' => $json['error_message']];
   }
 
   // TODO: this needs to move to a separate bundle or file
