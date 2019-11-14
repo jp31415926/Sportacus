@@ -599,7 +599,7 @@ class GameController extends Controller {
     $twilio_from = $this->container->getParameter('twilio_from');
     $twilio_user = $this->container->getParameter('twilio_user');
     $twilio_pass = $this->container->getParameter('twilio_pass');
-    $URL = 'https://api.twilio.com/2010-04-01/Accounts/'.$user.'/Messages.json';
+    $url = 'https://api.twilio.com/2010-04-01/Accounts/'.$twilio_user.'/Messages.json';
 
     $post_data['To'] = $num;
     $post_data['From'] = $twilio_from;
