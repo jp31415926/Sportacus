@@ -592,6 +592,9 @@ class GameController extends Controller {
     if (empty($num) || empty($msg)) {
       return -1;
     }
+    if (strlen($num) == 10) {
+      $num = '+1'.$num;
+    }
     if ($this->container->getParameter('test_text')) {
       $msg = "To $num:$msg";
       $num = $this->container->getParameter('twilio_test_to');
@@ -613,6 +616,13 @@ class GameController extends Controller {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $json = json_decode(curl_exec($curl), true);
     curl_close($curl);
+    $output = var_export($json, true);
+    
+    $fp = fopen('../var/logs/twilio_debug_output.txt', 'a');
+    fwrite($fp, $output);
+    fwrite($fp, "\n-----\n\n");
+    fclose($fp);
+    
     return empty($json['error_code']) ? FALSE : ['error_code' => $json['errorcode'], 'error_msg' => $json['error_message']];
   }
 
@@ -635,7 +645,7 @@ class GameController extends Controller {
     }
     // send an email
     $message = \Swift_Message::newInstance()
-            ->setSubject('[Sportac.us] ' . $subject)
+            ->setSubject('[Sportacus] ' . $subject)
             ->setFrom(['notification@sportac.us' => 'Sportac.us Scheduling System'])
             ->setCc(['john.price@ayso894.net' => 'John Price']) // FIXME
             ->setTo($emailTo)
@@ -722,9 +732,9 @@ class GameController extends Controller {
                 ]
         );
         if ($new_game == NULL) {
-          $textmsg = "Sportac.us Game {$old_game->getNumber()}: $subject$textmsg";
+          $textmsg = "Sportacus Game {$old_game->getNumber()}: $subject$textmsg";
         } else {
-          $textmsg = "Sportac.us Game {$old_game->getNumber()}: $subject$textmsg - http://sportac.us/game/{$old_game->getId()}/show for details";
+          $textmsg = "Sportacus Game {$old_game->getNumber()}: $subject$textmsg - https://sportac.us/game/{$old_game->getId()}/show for details";
         }
         $to = []; // array of email addresses
         $texts = [];
