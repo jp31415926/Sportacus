@@ -52,8 +52,8 @@ services:
     tags:  [{ name: console.command }]
     arguments:
       - '@sportacus_project_game_repository_sql'
-      - '%tropo_dev_key%'
-      - '%tropo_prod_key%'
+#      - '%tropo_dev_key%'
+#      - '%tropo_prod_key%'
 
 # =====================================================
 # Project Game Importer

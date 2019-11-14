@@ -18,6 +18,9 @@ parameters:
     recaptcha_secret: ThisTokenIsNotSoSecretChangeIt
     secret: ThisTokenIsNotSoSecretChangeIt
     test_email: true
-    tropo_dev_key: 123456
-    tropo_prod_key: 123456
     httpprotocol: https
+    twilio_from: "+12345678901"
+    twilio_pass: ThisTokenIsNotSoSecretChangeIt
+    twilio_user: username
+    twilio_test_to: "+12345678901"
+    test_text: true

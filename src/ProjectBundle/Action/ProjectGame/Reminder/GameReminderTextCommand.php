@@ -16,14 +16,15 @@ class GameReminderTextCommand extends Command
   protected $dbConn;
   protected $repository;
 
-  protected $tropoDevKey;
-  protected $tropoProdKey;
-  protected $tropoUrl = 'http://api.tropo.com/1.0/sessions?action=create&token=';
+  #protected $tropoDevKey;
+  #protected $tropoProdKey;
+  #protected $tropoUrl = 'http://api.tropo.com/1.0/sessions?action=create&token=';
 
-  public function __construct(Repository $repository, $tropoDevKey, $tropoProdKey)
+  #public function __construct(Repository $repository, $tropoDevKey, $tropoProdKey)
+  public function __construct(Repository $repository)
   {
-    $this->tropoDevKey  = $tropoDevKey;
-    $this->tropoProdKey = $tropoProdKey;
+    #$this->tropoDevKey  = $tropoDevKey;
+    #$this->tropoProdKey = $tropoProdKey;
 
     $this->repository = $repository;
     $this->dbConn     = $repository->getDatabaseConnection();
@@ -53,8 +54,6 @@ All the parameters are optional.
 --send=1  Is required to actually send the texts.  --send=0 or just leaving it out can be used for testing.
 --env
   Defaults to the development enviroment.
-  In development, texts are sent using the tropo_dev_key  parameter.
-  In production,  texts are sent using the tropo_prod_key parameter.
 
 One text will be sent per game per referee if the referee's option_reminder_text is set.
 
@@ -126,7 +125,7 @@ EOT;
 
     $msg = "Sportacus Game {$game['number']} {$homeTeamName} vs {$awayTeamName}, {$fieldName}, {$dt->format('g:i A')}";
 
-    $url = sprintf('%s&num=%s&msg=%s',$this->tropoUrl,urlencode($phone),urlencode($msg));
+    #$url = sprintf('%s&num=%s&msg=%s',$this->tropoUrl,urlencode($phone),urlencode($msg));
 
     if (!$official['option_reminder_text'] && true) return;
 
@@ -135,13 +134,12 @@ EOT;
     if (!$send) return;
 
     // Replace with Texter service
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    //echo "Fetching $url\n";
-    curl_exec($curl);
-    curl_close($curl);
-    usleep(1000000);
+    //$curl = curl_init();
+    //curl_setopt($curl, CURLOPT_URL, $url);
+    //curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    //curl_exec($curl);
+    //curl_close($curl);
+    //usleep(1000000);
   }
   /* ========================================================
    * Main Entry Point
@@ -151,13 +149,13 @@ EOT;
   {
     // Select tropo key based on enviroment
     $env = $input->getOption('env');
-    switch($env) {
-      case 'prod':
-        $this->tropoUrl .= $this->tropoProdKey;
-        break;
-      default:
-        $this->tropoUrl .= $this->tropoDevKey;
-    }
+    #switch($env) {
+    #  case 'prod':
+    #    $this->tropoUrl .= $this->tropoProdKey;
+    #    break;
+    #  default:
+    #    $this->tropoUrl .= $this->tropoDevKey;
+    #}
     // Master override for testing
     $send = $input->getOption('send') ? true : false;
 
