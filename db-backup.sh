@@ -12,6 +12,6 @@ BACKUP=dbbackup-`date +%F_%H%M`.sql.7z
 # Use command like the following to set those values:
 #mysql_config_editor set --login-path=symfony --host=localhost --user=$MYSQL_USER --password
 
-mysqldump --login-path=symfony $MYSQL_DB > database-backup.sql
+mysqldump --login-path=symfony --no-tablespaces $MYSQL_DB > database-backup.sql
 mkdir -p $DIR
 7z a $DIR/$BACKUP database-backup.sql > /dev/null
