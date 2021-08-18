@@ -86,6 +86,8 @@ include_once __DIR__ . '/parameters.php';
   | ref_admin_email | varchar(255) | YES  |     | NULL    |                |
   +-----------------+--------------+------+-----+---------+----------------+
 
+ https://national.ayso.org/Volunteers/ViewCertification?UserName=71243433
+
   JSON response looks like this (as of 2019-04-03):
 
 GET https://national.ayso.org/Volunteers/SelectViewCertificationInitialData?AYSOID=71243433
@@ -1130,12 +1132,10 @@ foreach ($users as $user_id => $user) {
         echo "* Enabling disabled referee: " . $aysoid . ' ' . $user['first_name'] . ' ' . $user['last_name'] . "\n";
         system("echo \"$aysoid $fullname\" >> ref-enabled-list.txt");
 
-        $msg = "You are now allowed to request referee assignment to games on Sportacus (you may have to logout and log back in for this change to take effect).\n\n" .
-          "After you login, click \"Ref Schedule\" at top, then you will be able to click on the \"CR\", \"AR1\" or \"AR2\" of the schedule and assign yourself to games.\n\n" .
-          "I'm still working out the bugs, so feel free to use the Contact link or email me to report problems.\n\n" .
-          "Thanks,\n" .
-          "John Price\n" .
-          "(256) 213-1969";
+        $msg = "You now have access to request referee assignment to games on Sportacus (you may have to logout and log back in for this change to take effect).\n\n" .
+          "After logging in, click \"Ref Schedule\" at top, then you will be able to click on the \"CR\", \"AR1\" or \"AR2\" of the schedule and assign yourself to games.\n\n" .
+          "If you need help, please use the help menu, contact your referee admin, or use the Contact form from the Help menu.\n\n" .
+          "Thanks for using Sportacus!\n";
         $to = [$user['email'] => $user['first_name'] . ' ' . $user['last_name']];
         $cc = [];
         if ($region['ref_admin_email']) {
