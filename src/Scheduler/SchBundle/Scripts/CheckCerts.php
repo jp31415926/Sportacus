@@ -914,8 +914,17 @@ function GetVolCerts($aysoid)
   if ($aysoid < 10000000 || $aysoid > 999999999) {
     return false;
   }
+  
+  // attempt to avoid "file_get_contents(): Failed to enable crypto"
+  $arrContextOptions = 
+    array(
+          "ssl" => array(
+                         "verify_peer" => false,
+                         "verify_peer_name" => false,
+                         ),
+          );
   $url = 'https://national.ayso.org/Volunteers/SelectViewCertificationInitialData?AYSOID=' . $aysoid;
-  $result = file_get_contents($url);
+  $result = file_get_contents($url, false, stream_context_create($arrContextOptions));
   // Will dump a beauty json :3
   return json_decode($result, true);
 }
