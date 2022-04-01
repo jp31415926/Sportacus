@@ -100,11 +100,7 @@ class User extends BaseUser implements \ArrayAccess
   /**
    * @var string $ayso_id
    *
-   * @ORM\Column(name="ayso_id", type="string", length=10, unique=true)
-   * @Assert\Range(
-   *   min = 10000000, minMessage = "AYSO ID must be a 8 or 9 digit number",
-   *   max = 999999999, maxMessage = "AYSO ID must be a 8 or 9 digit number"
-   * )
+   * @ORM\Column(name="ayso_id", type="string", length=20, unique=true)
    */
   private $ayso_id;
 
